@@ -162,16 +162,9 @@
 <p>HashMap</p>
 <p>key value </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>HashSet<strong>也是线程不安全的</strong>。</p>
-<p><img src="/img/image-20191226150357090.png" alt="image-20191226150357090"></p>
-<p>ArrayList HashSet HashMap 都是线程不安全的 都会报并发修改异常</p>
-<p>Hash Map的解决同样是concurrentHashMap</p>
-<h2 id="八锁问题："><a href="#八锁问题：" class="headerlink" title="八锁问题："></a>八锁问题：</h2><p><img src="/img/image-20191226152040654.png" alt="image-20191226152040654"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> 锁的是对象</span><br></pre></td></tr></table></figure>
-
-<p><img src="/img/image-20191226153759978.png" alt="image-20191226153759978"></p>
-
+        
+          <a class="article-more-a" href="/2019/12/30/HashSet/#more">more >></a>
+        
       
 
       

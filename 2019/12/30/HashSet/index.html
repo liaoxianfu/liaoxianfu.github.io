@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>HashSet | laioxianfu&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="HashSet与HashMapHashSet底层是什么？ HashMap key value  123public boolean add(E e) &amp;#123;    return map.put(e, PRESENT)&#x3D;&#x3D;null;&amp;#125;  HashSet也是线程不安全的。  ArrayList HashSet HashMap 都是线程不安全的 都会报并发修改异常 Hash Map的解决">
+  <meta name="description" content="HashSet与HashMapHashSet底层是什么？ HashMap key value  123public boolean add(E e) &amp;#123;    return map.put(e, PRESENT)&#x3D;&#x3D;null;&amp;#125;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HashSet">
 <meta property="og:url" content="http://yoursite.com/2019/12/30/HashSet/index.html">
 <meta property="og:site_name" content="laioxianfu&#39;s blog">
-<meta property="og:description" content="HashSet与HashMapHashSet底层是什么？ HashMap key value  123public boolean add(E e) &amp;#123;    return map.put(e, PRESENT)&#x3D;&#x3D;null;&amp;#125;  HashSet也是线程不安全的。  ArrayList HashSet HashMap 都是线程不安全的 都会报并发修改异常 Hash Map的解决">
+<meta property="og:description" content="HashSet与HashMapHashSet底层是什么？ HashMap key value  123public boolean add(E e) &amp;#123;    return map.put(e, PRESENT)&#x3D;&#x3D;null;&amp;#125;">
 <meta property="og:locale" content="zh">
 <meta property="og:image" content="http://yoursite.com/img/image-20191226150357090.png">
 <meta property="og:image" content="http://yoursite.com/img/image-20191226152040654.png">
 <meta property="og:image" content="http://yoursite.com/img/image-20191226153759978.png">
 <meta property="article:published_time" content="2019-12-30T04:27:29.000Z">
-<meta property="article:modified_time" content="2019-12-30T04:32:40.823Z">
+<meta property="article:modified_time" content="2019-12-30T04:35:20.787Z">
 <meta property="article:author" content="xianfu liao">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="hashSet">
@@ -170,6 +170,7 @@
 <p>HashMap</p>
 <p>key value </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 
 <p>HashSet<strong>也是线程不安全的</strong>。</p>
 <p><img src="/img/image-20191226150357090.png" alt="image-20191226150357090"></p>
