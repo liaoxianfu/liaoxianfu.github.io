@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Go语言基础（一） | liaoxianfu&#39;s blog</title>
+  <meta name="description" content="Go语言基础（一）go语言命名规范go语言遵守简单的命名规则，规则如下 ① 一个名字（包括变量名、函数名、常量名、类型名、语句标号、包名）必须是由一个字母（大小写均可）或者下划线_开头 ②名字的长度没有限制，后面可以以跟任意数量的字母、下划线、数字 ③区分大小写 ④25个 关键字不能用作自定义的名字，只能在特定的语法结构中使用  ⑤ 有30多个预定义的名字，这些并不是关键字，可以重新定义，但是要注">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言基础（一）">
+<meta property="og:url" content="http://blog.democpp.cn/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="Go语言基础（一）go语言命名规范go语言遵守简单的命名规则，规则如下 ① 一个名字（包括变量名、函数名、常量名、类型名、语句标号、包名）必须是由一个字母（大小写均可）或者下划线_开头 ②名字的长度没有限制，后面可以以跟任意数量的字母、下划线、数字 ③区分大小写 ④25个 关键字不能用作自定义的名字，只能在特定的语法结构中使用  ⑤ 有30多个预定义的名字，这些并不是关键字，可以重新定义，但是要注">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231164812091.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231165051157.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231172620606.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231173146735.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231172117559.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231173508827.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231175757595.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/go/image-20191231180006032.png">
+<meta property="article:published_time" content="2019-12-31T10:26:26.000Z">
+<meta property="article:modified_time" content="2019-12-31T10:29:34.739Z">
+<meta property="article:author" content="xianfu liao">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.democpp.cn/img/go/image-20191231164812091.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://blog.democpp.cn/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="liaoxianfu&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/liaoxianfu" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">过不去的过去</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">JPG程序猿</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HeNan, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>努力学习JPG</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashSet/" rel="tag">hashSet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/golang/" style="font-size: 14px;">golang</a> <a href="/tags/hashSet/" style="font-size: 13px;">hashSet</a> <a href="/tags/java/" style="font-size: 14px;">java</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/golang/">golang</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/" class="title">Go语言基础（一）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-12-31T10:26:26.000Z" itemprop="datePublished">2019-12-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/golang/">golang</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/12/31/test/" class="title">test</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-12-31T04:06:00.000Z" itemprop="datePublished">2019-12-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/java/">java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/12/30/HashSet/" class="title">HashSet</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-12-30T04:27:29.000Z" itemprop="datePublished">2019-12-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/java/">java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/12/30/ArrayList%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98/" class="title">java多线程</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-12-30T03:58:32.000Z" itemprop="datePublished">2019-12-30</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言基础（一）"><span class="toc-number">1.</span> <span class="toc-text">Go语言基础（一）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#go语言命名规范"><span class="toc-number">1.1.</span> <span class="toc-text">go语言命名规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#go语言声明"><span class="toc-number">1.2.</span> <span class="toc-text">go语言声明</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#变量声明"><span class="toc-number">1.2.1.</span> <span class="toc-text">变量声明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指针"><span class="toc-number">1.3.</span> <span class="toc-text">指针</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#new函数"><span class="toc-number">1.3.1.</span> <span class="toc-text">new函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#变量的生命周期"><span class="toc-number">1.4.</span> <span class="toc-text">变量的生命周期</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Go语言基础（一）" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Go语言基础（一）
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
+	  <time datetime="2019-12-31T10:26:26.000Z" itemprop="datePublished">2019-12-31</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/golang/">golang</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/golang/" rel="tag">golang</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Go语言基础（一）"><a href="#Go语言基础（一）" class="headerlink" title="Go语言基础（一）"></a>Go语言基础（一）</h2><h3 id="go语言命名规范"><a href="#go语言命名规范" class="headerlink" title="go语言命名规范"></a>go语言命名规范</h3><p>go语言遵守简单的命名规则，规则如下</p>
+<p>① 一个名字（包括变量名、函数名、常量名、类型名、语句标号、包名）必须是由一个字母（大小写均可）或者下划线<code>_</code>开头</p>
+<p>②名字的<strong>长度没有限制</strong>，后面可以以跟<strong>任意</strong>数量的<strong>字母</strong>、<strong>下划线</strong>、<strong>数字</strong></p>
+<p>③区分大小写</p>
+<p>④25个 关键字不能用作自定义的名字，只能在特定的语法结构中使用</p>
+<p><img src="/img/go/image-20191231164812091.png" alt="image-20191231164812091"></p>
+<p>⑤ 有30多个预定义的名字，这些并不是关键字，可以重新定义，但是要注意避免过度使用带来的混乱。</p>
+<p><img src="/img/go/image-20191231165051157.png" alt="image-20191231165051157"></p>
+<p>⑥ 名字的作用域： 如果在函数内部定义，那么就只能在函数中使用它，如果在函数外部定义那么就是在<strong>当前包下</strong>可以访问（注意：这里是包下，不仅仅是在变量所在的源文件中）。</p>
+<p>⑦ 如果一个名字（变量、函数名）在其他的包中也可以访问类似于Java中的public的概念。</p>
+<h3 id="go语言声明"><a href="#go语言声明" class="headerlink" title="go语言声明"></a>go语言声明</h3><blockquote>
+<p>声明语句定义了程序的各种实体对象以及部分或全部的属性。 –go语言圣经</p>
+</blockquote>
+<p>go语言主要有四种类型的声明</p>
+<p>① 声明变量</p>
+<p>② const 声明常量</p>
+<p>③type 声明类型</p>
+<p>④func 声明函数</p>
+<h4 id="变量声明"><a href="#变量声明" class="headerlink" title="变量声明"></a>变量声明</h4><p>变量的声明有两种方式 一种是利用var声明 这种一般声明在包一级的变量（全局变量），另一种是利用<code>:=</code>声明，这种声明只能声明局部变量。</p>
+<p>利用<code>var</code>声明格式<code>var 变量名 变量类型=变量值</code>其中<code>变量类型</code>与<code>变量值</code>可以任选一个。如果只写了<code>变量类型</code>那么就会默认赋值为该类型对应的零值。如果使用了<code>变量值</code>编译器会推导出变量的类型。</p>
+<p>变量的声明可以在一个声明语句中同时声明一组变量，或者用一组初始化表达式初始化一组变量。</p>
+<p><img src="/img/go/image-20191231172620606.png" alt="image-20191231172620606"></p>
+<p><strong>注：这里的变量值可以是一个值，也可以表达式，为了叙述方便，统一称之为为变量值</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> test1 <span class="keyword">string</span> = <span class="string">"这是一个全局变量"</span> <span class="comment">// 没有简写的变量声明</span></span><br><span class="line"><span class="keyword">var</span> test2=<span class="string">"这是可以推导出变量类型的声明"</span>    <span class="comment">// 自动推导出类型为string</span></span><br><span class="line"><span class="keyword">var</span> test3 <span class="keyword">string</span>              <span class="comment">// 赋值对应的string的零值 也就是空字符串 ""</span></span><br><span class="line"><span class="keyword">var</span> test4,test5 <span class="keyword">int</span> <span class="comment">// 同时声明一组变量 如果都是同样的类型可以只写一个类型</span></span><br><span class="line"><span class="keyword">var</span> test6,test7 = <span class="number">6</span>,<span class="string">"test7"</span> <span class="comment">// 声明一组变量并赋值，可以根据赋值的类型推导出变量的类型</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Printf(<span class="string">"%s \n%s \n%s\n%d\n%d\n%d\n%s\n"</span>,test1,test2,test3,test4,test5,test6,test7)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果</p>
+<p><img src="/img/go/image-20191231173146735.png" alt="image-20191231173146735"></p>
+<p>利用<code>:=</code>声明 格式为<code>变量名:=变量值</code> 变量的类型可以根据变量值自动推导</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a := <span class="number">5</span></span><br><span class="line">	b := a + <span class="number">5</span></span><br><span class="line">	fmt.Printf(<span class="string">"%d"</span>, b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果<br><img src="/img/go/image-20191231172117559.png" alt="image-20191231172117559"></p>
+<p>与<code>var</code>一样，<code>:=</code>也可以同时声明一组变量</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	c, d := <span class="number">5</span>, <span class="string">"hello"</span></span><br><span class="line">	fmt.Printf(<span class="string">"c=%d d=%s"</span>, c, d)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果<br><img src="/img/go/image-20191231173508827.png" alt="image-20191231173508827"></p>
+<p><code>var</code>与<code>:=</code>均可以接受函数返回值开声明和初始化变量，简短变量的左边可以不全为新的变量例如</p>
+<p><img src="/img/go/image-20191231175757595.png" alt="image-20191231175757595"></p>
+<p>这里<code>out,err:=...</code>的<code>err</code>就不是新的变量 而是上面的，这里只是对err进行了赋值操作。但是简短变量必须至少存在一个新的变量 否者就会报错，例如</p>
+<p><img src="/img/go/image-20191231180006032.png" alt="image-20191231180006032"></p>
+<p>这里第二条语句就会报错 因为没有新的变量引入，解决方法是将简短声明    <code>:=</code>修改成为多重赋值语句<code>=</code></p>
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h3><p>一个变量对应一个保存了变量对应类型值的内存空间。利用指针可以直接操作数据</p>
+<p>例如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	x:=<span class="number">1</span></span><br><span class="line">	p:=&amp;x <span class="comment">// p的类型 *int 存储变量x的地址</span></span><br><span class="line">	fmt.Printf(<span class="string">"%T"</span>,p) <span class="comment">//*int</span></span><br><span class="line">	fmt.Printf(<span class="string">"*p=%d\n"</span>,*p) <span class="comment">//*p 代表p指针指向地址存储的值 也就是x的值 1</span></span><br><span class="line">	*p = <span class="number">2</span> <span class="comment">//直接操作内存地址修改值 也就是p指针指向的地址的值修改成2</span></span><br><span class="line">	fmt.Printf(<span class="string">"x = %d"</span>,x) <span class="comment">// x的值被修改成2</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="new函数"><a href="#new函数" class="headerlink" title="new函数"></a>new函数</h4><p>new（T）将会创建一个T类型的匿名变量，初始化为T类型的都零值，返回的是变量的地址，返回的指针类型为<code>*T</code>但是和变量声明的方式创建变量并没有什么区别，只是不用创建一个变量。</p>
+<p>例如</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	p:=<span class="built_in">new</span>(<span class="keyword">int</span>) <span class="comment">// 创建一个匿名的int型变量 返回该变量的地址</span></span><br><span class="line">	fmt.Printf(<span class="string">"*p = %d"</span>,*p)</span><br><span class="line">	*p = <span class="number">5</span> <span class="comment">//  修改变量的值</span></span><br><span class="line">	fmt.Printf(<span class="string">"*p= %d"</span>,*p)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量的生命周期"><a href="#变量的生命周期" class="headerlink" title="变量的生命周期"></a>变量的生命周期</h3><p>变量的生命周期是指程序运行期间变量有效的存在的时间间隔。对于包一级的变量来说，他们的生命周期是和程序的运行周期是一致的，而局部变量的生命周期是动态的，从每次的创建的新的变量语句开始知道该变量不引用为止，然后存储空间可能被收回。函数的参数和返回值都是局部变量，在每次的函数调用时会被创建。</p>
+<blockquote>
+<p>那么Go语言的自动圾收集器是如何知道一个变量是何时可以被回收的呢？这里我们可以避开 完整的技术细节，基本的实现思路是，从每个包级的变量和每个当前运行函数的每一个局部 变量开始，通过指针或引用的访问路径遍历，是否可以找到该变量。如果不存在这样的访问 路径，那么说明该变量是不可达的，也就是说它是否存在并不会影响程序后续的计算结果。<br>因为一个变量的有效周期只取决于是否可达，因此一个循环迭代内部的局部变量的生命周期 可能超出其局部作用域。同时，局部变量可能在函数返回之后依然存在。<br>编译器会自动选择在栈上还是在堆上分配局部变量的存储空间，但可能令人惊讶的是，这个 选择并不是由用var还是new声明变量的方式决定的。</p>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://blog.democpp.cn/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/" title="Go语言基础（一）" target="_blank" rel="external">http://blog.democpp.cn/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/liaoxianfu" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/liaoxianfu" target="_blank"><span class="text-dark">过不去的过去</span><small class="ml-1x">JPG程序猿</small></a></h3>
+        <div>努力学习Java、Python、Go，爱折腾，目前是在校生。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2019/12/31/test/" title="test"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2019 xianfu liao
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
