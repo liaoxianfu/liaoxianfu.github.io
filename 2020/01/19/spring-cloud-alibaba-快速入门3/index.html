@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>spring cloud alibaba 快速入门3 | liaoxianfu&#39;s blog</title>
+  <meta name="description" content="spring cloud alibaba快速入门（三）spring-cloud-alibaba-dubbo 快速入门前置条件安装好nacos 这里使用nacos作为注册中心，在spring cloud alibaba快速入门（一）中已经详细介绍了如何安装nacos,这里不做赘述。 创建项目在之前的项目中添加一个名为spring-cloud-alibaba-dubbo-starter的项目 在spr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring cloud alibaba 快速入门3">
+<meta property="og:url" content="http://blog.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="spring cloud alibaba快速入门（三）spring-cloud-alibaba-dubbo 快速入门前置条件安装好nacos 这里使用nacos作为注册中心，在spring cloud alibaba快速入门（一）中已经详细介绍了如何安装nacos,这里不做赘述。 创建项目在之前的项目中添加一个名为spring-cloud-alibaba-dubbo-starter的项目 在spr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106193009212.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106193333297.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106204116189.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106204553445.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106204841236.png">
+<meta property="og:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106205119387.png">
+<meta property="article:published_time" content="2020-01-19T07:02:21.000Z">
+<meta property="article:modified_time" content="2020-01-19T07:03:11.304Z">
+<meta property="article:author" content="xianfu liao">
+<meta property="article:tag" content="springcloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.democpp.cn/img/springcloudalibaba/image-20200106193009212.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://blog.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="liaoxianfu&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/liaoxianfu" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">过不去的过去</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">JPG程序猿</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HeNan, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form" method="GET" action="https://www.baidu.com/s?">
+	<div class="input-group">
+    	<input name="wd" type="text" class="form-control search-form-input" placeholder="搜索" />
+	    <span class="input-group-btn">
+	    	<button type="submit" class=" btn btn-flat search-form-submit"><i class="icon icon-search"></i></button>
+	    </span>
+    </div>
+</form>
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>努力学习JPG</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springcloud/">springcloud</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashSet/" rel="tag">hashSet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hashSet/" style="font-size: 13px;">hashSet</a> <a href="/tags/java/" style="font-size: 13.5px;">java</a> <a href="/tags/springcloud/" style="font-size: 14px;">springcloud</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/springcloud/">springcloud</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/" class="title">spring cloud alibaba 快速入门3</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-01-19T07:02:21.000Z" itemprop="datePublished">2020-01-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/springcloud/">springcloud</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/" class="title">spring cloud alibaba 快速入门2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-01-19T07:00:31.000Z" itemprop="datePublished">2020-01-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/springcloud/">springcloud</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/" class="title">spring cloud alibaba 快速入门1</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-01-19T06:55:34.000Z" itemprop="datePublished">2020-01-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/springcloud/">springcloud</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/01/05/springclodalibaba%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" class="title">springclodalibaba快速入门</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-01-05T10:35:35.000Z" itemprop="datePublished">2020-01-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/golang/">golang</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/12/31/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/" class="title">Go语言基础（一）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-12-31T10:26:26.000Z" itemprop="datePublished">2019-12-31</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#spring-cloud-alibaba快速入门（三）"><span class="toc-number">1.</span> <span class="toc-text">spring cloud alibaba快速入门（三）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#spring-cloud-alibaba-dubbo-快速入门"><span class="toc-number">1.1.</span> <span class="toc-text">spring-cloud-alibaba-dubbo 快速入门</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#前置条件"><span class="toc-number">1.1.1.</span> <span class="toc-text">前置条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建项目"><span class="toc-number">1.1.2.</span> <span class="toc-text">创建项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建服务消费者和服务提供者的接口"><span class="toc-number">1.1.3.</span> <span class="toc-text">创建服务消费者和服务提供者的接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建服务提供者"><span class="toc-number">1.1.4.</span> <span class="toc-text">创建服务提供者</span></a></li></ol></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-spring-cloud-alibaba-快速入门3" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      spring cloud alibaba 快速入门3
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/" class="article-date">
+	  <time datetime="2020-01-19T07:02:21.000Z" itemprop="datePublished">2020-01-19</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/springcloud/">springcloud</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/springcloud/" rel="tag">springcloud</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="spring-cloud-alibaba快速入门（三）"><a href="#spring-cloud-alibaba快速入门（三）" class="headerlink" title="spring cloud alibaba快速入门（三）"></a>spring cloud alibaba快速入门（三）</h2><h3 id="spring-cloud-alibaba-dubbo-快速入门"><a href="#spring-cloud-alibaba-dubbo-快速入门" class="headerlink" title="spring-cloud-alibaba-dubbo 快速入门"></a>spring-cloud-alibaba-dubbo 快速入门</h3><h4 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h4><p>安装好nacos</p>
+<p>这里使用nacos作为注册中心，在spring cloud alibaba快速入门（一）中已经详细介绍了如何安装nacos,这里不做赘述。</p>
+<h4 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h4><p>在之前的项目中添加一个名为<code>spring-cloud-alibaba-dubbo-starter</code>的项目</p>
+<p>在<code>spring-cloud-alibaba-dubbo-starter</code>下创建maven项目<code>spring-cloud-alibaba-dubbo-starter-provider</code>如下图所示:</p>
+<p><img src="/img/springcloudalibaba/image-20200106193009212.png" alt="image-20200106193009212"></p>
+<p>同理创建<code>spring-cloud-alibaba-dubbo-starter-consumer</code>和<code>spring-cloud-alibaba-dubbo-starter-service</code></p>
+<p><img src="/img/springcloudalibaba/image-20200106193333297.png" alt="image-20200106193333297"></p>
+<p>效果如图所示。</p>
+<h4 id="创建服务消费者和服务提供者的接口"><a href="#创建服务消费者和服务提供者的接口" class="headerlink" title="创建服务消费者和服务提供者的接口"></a>创建服务消费者和服务提供者的接口</h4><p>在<code>spring-cloud-alibaba-dubbo-starter-service</code>项目下创建服务接口，这个接口是为<code>consumer</code>和<code>provider</code>提供。</p>
+<p>创建接口如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.liao.spring.cloud.alibaba.dubbo.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">hello</span><span class="params">(String info)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="创建服务提供者"><a href="#创建服务提供者" class="headerlink" title="创建服务提供者"></a>创建服务提供者</h4><p>在<code>spring-cloud-alibaba-dubbo-starter-provider</code>下引入<code>spring-cloud-alibaba-dubbo-starter-service</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.liao<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dubbo-starter-service<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在<code>spring-cloud-alibaba-dubbo-starter-provider</code>下引入dubbo的依赖支持</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.liao<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dubbo-starter-service<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--spring cloud dubbo--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--在dubbo的服务提供者上使用，不用开启web端口--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--springboot的单元测试--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--服务发现--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--nacos-config--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--sentinel--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>创建服务提供者的入口类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.liao.spring.cloud.alibaba.dubbo.service.provider;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DubboServiceProviderApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DubboServiceProviderApplication<span class="class">.<span class="keyword">class</span>,<span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建服务提供者服务，这里以返回一个简单的字符串为例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.liao.spring.cloud.alibaba.dubbo.service.provider.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.liao.spring.cloud.alibaba.dubbo.service.HelloService;</span><br><span class="line"><span class="keyword">import</span> org.apache.dubbo.config.annotation.Service;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span>(version = <span class="string">"1.0.0"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServiceImpl</span> <span class="keyword">implements</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String info)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> info;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>： 这里的<code>@Service</code>接口是来自<code>org.apache.dubbo.config.annotation.Service</code>这个包，而不是Spring下面的注解。实现的是<code>spring-cloud-alibaba-dubbo-starter-service</code>项目下的接口。</p>
+<p>创建配置文件<code>application.yml</code>和<code>bootstrap.properties</code>因为这里引入了nacos的远程配置pom文件，所以必须添加<code>bootstrap.properties</code>配置文件进行远程配置中心地址的设置，否者会报错</p>
+<p>bootstrap.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.application.name</span>=<span class="string">spring-cloud-alibaba-dubbo-starter-provider</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.config.server-addr</span>=<span class="string">192.168.77.132:8848</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.config.file-extension</span>=<span class="string">yaml</span></span><br></pre></td></tr></table></figure>
+
+<p>application.yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">  <span class="attr">scan:</span></span><br><span class="line">    <span class="comment"># dubbo 服务扫描基准包</span></span><br><span class="line">    <span class="attr">base-packages:</span> <span class="string">com.liao.spring.cloud.alibaba.dubbo.service.provider.service</span></span><br><span class="line">  <span class="attr">protocol:</span></span><br><span class="line">    <span class="comment"># dubbo 协议</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">dubbo</span></span><br><span class="line">    <span class="comment"># dubbo 协议端口（ -1 表示自增端口，从 20880 开始）</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">-1</span></span><br><span class="line">  <span class="attr">registry:</span></span><br><span class="line">    <span class="comment"># 挂载到 Spring Cloud 注册中心</span></span><br><span class="line">    <span class="attr">address:</span> <span class="string">nacos://192.168.77.132:8848</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># Dubbo 应用名称</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-dubbo-starter-provider</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="comment"># Spring Boot 2.1 需要设定</span></span><br><span class="line">    <span class="attr">allow-bean-definition-overriding:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="comment"># Nacos 服务发现与注册配置</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.77</span><span class="number">.132</span><span class="string">:8848</span></span><br></pre></td></tr></table></figure>
+
+<p>启动服务；没有报错，证明启动成功，在nacos上可以发现已经注册成功</p>
+<p><img src="/img/springcloudalibaba/image-20200106204116189.png" alt="image-20200106204116189"></p>
+<p>创建服务消费者</p>
+<p>在<code>spring-cloud-alibaba-dubbo-starter-consumer</code>下引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.liao<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dubbo-starter-service<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--spring cloud dubbo--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--在dubbo的服务消费者上使用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--springboot的单元测试--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--服务发现--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--nacos-config--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--sentinel--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建sptingboot入口类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.liao.spring.cloud.alibaba.dubbo.service.consumer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DubboServiceConsumerApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DubboServiceConsumerApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建配置文件<code>application.yml</code>和<code>bootstrap.properties</code>因为这里引入了nacos的远程配置pom文件，所以必须添加<code>bootstrap.properties</code>配置文件进行远程配置中心地址的设置，否者会报错</p>
+<p><strong>application.yml</strong></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">  <span class="attr">protocol:</span></span><br><span class="line">    <span class="comment"># dubbo 协议</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">dubbo</span></span><br><span class="line">    <span class="comment"># dubbo 协议端口（ -1 表示自增端口，从 20880 开始）</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">-1</span></span><br><span class="line">  <span class="attr">registry:</span></span><br><span class="line">    <span class="comment"># 挂载到 Spring Cloud 注册中心</span></span><br><span class="line">    <span class="attr">address:</span> <span class="string">nacos://192.168.77.132:8848</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># Dubbo 应用名称</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">spring-cloud-alibaba-dubbo-starter-consumer</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="comment"># Spring Boot 2.1 需要设定</span></span><br><span class="line">    <span class="attr">allow-bean-definition-overriding:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="comment"># Nacos 服务发现与注册配置</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">192.168</span><span class="number">.77</span><span class="number">.132</span><span class="string">:8848</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">14000</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>bootstrap.properties</strong></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.application.name</span>=<span class="string">spring-cloud-alibaba-dubbo-starter-consumer</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.config.server-addr</span>=<span class="string">192.168.77.132:8848</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.config.file-extension</span>=<span class="string">yaml</span></span><br></pre></td></tr></table></figure>
+
+<p>添加controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.liao.spring.cloud.alibaba.dubbo.service.consumer.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.liao.spring.cloud.alibaba.dubbo.service.HelloService;</span><br><span class="line"><span class="keyword">import</span> org.apache.dubbo.config.annotation.Reference;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Reference</span>(version = <span class="string">"1.0.0"</span>)</span><br><span class="line">    <span class="keyword">private</span> HelloService helloService;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/&#123;info&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(@PathVariable String info)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> helloService.hello(info);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>启动服务，访问<a href="http://localhost:14000/123" target="_blank" rel="noopener">http://localhost:14000/123</a> 浏览器出现123证明成功</p>
+<p>访问nacos发现服务已经注册成功</p>
+<p><img src="/img/springcloudalibaba/image-20200106204553445.png" alt="image-20200106204553445"></p>
+<p><strong>测试远程配置</strong></p>
+<p>在nacos上添加配置如下图</p>
+<p><img src="/img/springcloudalibaba/image-20200106204841236.png" alt="image-20200106204841236"></p>
+<p>点击发布，并删除<code>spring-cloud-alibaba-dubbo-starter-consumer</code>下的server配置</p>
+<p><img src="/img/springcloudalibaba/image-20200106205119387.png" alt="image-20200106205119387"></p>
+<p>发现修改成功，证明远程配置加载成功。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://blog.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/" title="spring cloud alibaba 快速入门3" target="_blank" rel="external">http://blog.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/liaoxianfu" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/liaoxianfu" target="_blank"><span class="text-dark">过不去的过去</span><small class="ml-1x">JPG程序猿</small></a></h3>
+        <div>努力学习Java、Python、Go，爱折腾，目前是在校生。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/" title="spring cloud alibaba 快速入门2"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2020 xianfu liao
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:blog.democpp.cn ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
