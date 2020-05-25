@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.democpp.cn/about/index.html</loc>
+    
+    <lastmod>2020-05-25T08:17:36.092Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.democpp.cn/2020/01/28/ArrayList/</loc>
     
     <lastmod>2020-01-28T12:18:06.406Z</lastmod>
