@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>pytorch02自动求导 | liaoxianfu&#39;s blog</title>
+  <meta name="description" content="自动求导PyTorch在autograd模块中实现了计算图的相关功能，autograd中的核心数据结构是Variable。从v0.4版本起，Variable和Tensor合并。我们可以认为需要求导(requires_grad)的tensor即Variable. autograd记录对tensor的操作记录用来构建计算图。 Variable提供了大部分tensor支持的函数，但其不支持部分inpla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pytorch02自动求导">
+<meta property="og:url" content="http://www.democpp.cn/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="自动求导PyTorch在autograd模块中实现了计算图的相关功能，autograd中的核心数据结构是Variable。从v0.4版本起，Variable和Tensor合并。我们可以认为需要求导(requires_grad)的tensor即Variable. autograd记录对tensor的操作记录用来构建计算图。 Variable提供了大部分tensor支持的函数，但其不支持部分inpla">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.democpp.cn/img/DeepLearning/com_graph.svg">
+<meta property="article:published_time" content="2020-06-11T08:11:02.000Z">
+<meta property="article:modified_time" content="2020-06-11T08:13:53.417Z">
+<meta property="article:author" content="xianfu liao">
+<meta property="article:tag" content="Pytorch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.democpp.cn/img/DeepLearning/com_graph.svg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.democpp.cn/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="liaoxianfu&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/liaoxianfu" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">过不去的过去</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">JPG程序猿</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HeNan, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form" method="GET" action="https://www.baidu.com/s?">
+	<div class="input-group">
+    	<input name="wd" type="text" class="form-control search-form-input" placeholder="搜索" />
+	    <span class="input-group-btn">
+	    	<button type="submit" class=" btn btn-flat search-form-submit"><i class="icon icon-search"></i></button>
+	    </span>
+    </div>
+</form>
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>努力学习JPG</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Pytorch/">Pytorch</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/">bigData</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/HDFS/">HDFS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/MapReduce/">MapReduce</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/hive/">hive</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/ArrayList/">ArrayList</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-security/">spring security</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring-security/spring-boot/">spring boot</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/springcloud/">springcloud</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ArrayList/" rel="tag">ArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/" rel="tag">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pytorch/" rel="tag">Pytorch</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashSet/" rel="tag">hashSet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ArrayList/" style="font-size: 13px;">ArrayList</a> <a href="/tags/HDFS/" style="font-size: 13px;">HDFS</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/Pytorch/" style="font-size: 13.5px;">Pytorch</a> <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hashSet/" style="font-size: 13px;">hashSet</a> <a href="/tags/hive/" style="font-size: 13px;">hive</a> <a href="/tags/java/" style="font-size: 13.5px;">java</a> <a href="/tags/mysql/" style="font-size: 13px;">mysql</a> <a href="/tags/springcloud/" style="font-size: 14px;">springcloud</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Pytorch/">Pytorch</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/11/pytorch03%20%E5%B8%B8%E8%A7%81%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="title">常见神经网络</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-11T08:15:20.000Z" itemprop="datePublished">2020-06-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Pytorch/">Pytorch</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/" class="title">pytorch02自动求导</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-11T08:11:02.000Z" itemprop="datePublished">2020-06-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Pytorch/">Pytorch</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/30/Pytorch%20tensor%E6%93%8D%E4%BD%9C/" class="title">Pytorch tensor操作</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-30T08:35:18.000Z" itemprop="datePublished">2020-05-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/spring-security/">spring security</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/spring-security/spring-boot/">spring boot</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/25/SpringSecurityu%E4%B8%8ESpring-Boot%E6%95%B4%E5%90%88/" class="title">SpringSecurityu与Spring Boot整合</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-25T08:35:22.000Z" itemprop="datePublished">2020-05-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/java/">java</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/java/ArrayList/">ArrayList</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/01/28/ArrayList/" class="title">ArrayList</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-01-28T12:17:23.000Z" itemprop="datePublished">2020-01-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#自动求导"><span class="toc-number">1.</span> <span class="toc-text">自动求导</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#求导"><span class="toc-number">1.1.</span> <span class="toc-text">求导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算图"><span class="toc-number">1.2.</span> <span class="toc-text">计算图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展autograd"><span class="toc-number">1.3.</span> <span class="toc-text">扩展autograd</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-pytorch02自动求导" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pytorch02自动求导
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/" class="article-date">
+	  <time datetime="2020-06-11T08:11:02.000Z" itemprop="datePublished">2020-06-11</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Pytorch/">Pytorch</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Pytorch/" rel="tag">Pytorch</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="自动求导"><a href="#自动求导" class="headerlink" title="自动求导"></a>自动求导</h2><p>PyTorch在autograd模块中实现了计算图的相关功能，autograd中的核心数据结构是Variable。从v0.4版本起，Variable和Tensor合并。我们可以认为需要求导(requires_grad)的tensor即Variable. autograd记录对tensor的操作记录用来构建计算图。</p>
+<p>Variable提供了大部分tensor支持的函数，但其不支持部分<code>inplace</code>函数，因这些函数会修改tensor自身，而在反向传播中，variable需要缓存原来的tensor来计算反向传播梯度。如果想要计算各个Variable的梯度，只需调用根节点variable的<code>backward</code>方法，autograd会自动沿着计算图反向传播，计算每一个叶子节点的梯度。</p>
+<h3 id="求导"><a href="#求导" class="headerlink" title="求导"></a>求导</h3><p>指定参数可以进行求解梯度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在创建tensor的时候指定requires_grad</span></span><br><span class="line">a = t.randn(<span class="number">3</span>,<span class="number">4</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">a = t.randn(<span class="number">3</span>,<span class="number">4</span>).requires_grad_()</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">a = t.randn(<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">a.requires_grad=<span class="literal">True</span></span><br><span class="line">a</span><br></pre></td></tr></table></figure>
+
+<p>假设进行梯度求解 $d = sum(c=(a+b))$ </p>
+<p>也就是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a = t.randn(<span class="number">3</span>,<span class="number">4</span>, requires_grad=<span class="literal">True</span>) <span class="comment"># a允许求导</span></span><br><span class="line">b = t.zeros(<span class="number">3</span>,<span class="number">4</span>).requires_grad_() <span class="comment"># b允许求导</span></span><br><span class="line">c = a+b <span class="comment"># 没有指定c能够求导</span></span><br><span class="line">d = c.sum() </span><br><span class="line">d.backward() <span class="comment">#进行反向传播</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d <span class="comment"># d还是一个requires_grad=True的tensor,对它的操作需要慎重</span></span><br><span class="line">d.requires_grad <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.grad</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tensor([[1., 1., 1., 1.],</span><br><span class="line">        [1., 1., 1., 1.],</span><br><span class="line">        [1., 1., 1., 1.]])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此处虽然没有指定c需要求导，但c依赖于a，而a需要求导，</span></span><br><span class="line"><span class="comment"># 因此c的requires_grad属性会自动设为True</span></span><br><span class="line">a.requires_grad, b.requires_grad, c.requires_grad</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 由用户创建的variable属于叶子节点，对应的grad_fn是None</span></span><br><span class="line">a.is_leaf, b.is_leaf, c.is_leaf</span><br><span class="line"></span><br><span class="line"><span class="comment"># (True, True, False)</span></span><br></pre></td></tr></table></figure>
+
+<p>求导<br>$$<br>y=x^2*e^x<br>$$<br>求导结果<br>$$<br>{dy \over dx}=2x *e^x + x^2 * e^x<br>$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="string">'''计算y'''</span></span><br><span class="line">    y = x**<span class="number">2</span> * t.exp(x)</span><br><span class="line">    <span class="keyword">return</span> y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradf</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="string">'''手动求导函数'''</span></span><br><span class="line">    dx = <span class="number">2</span>*x*t.exp(x) + x**<span class="number">2</span>*t.exp(x)</span><br><span class="line">    <span class="keyword">return</span> dx</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x = t.randn(<span class="number">3</span>,<span class="number">4</span>, requires_grad = <span class="literal">True</span>)</span><br><span class="line">y = f(x)</span><br><span class="line">y</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">tensor([[1.7010e-03, 1.7171e+00, 2.9237e-01, 1.1170e-01],</span></span><br><span class="line"><span class="string">        [1.4809e-03, 2.6344e+01, 1.3164e-01, 4.0763e+00],</span></span><br><span class="line"><span class="string">        [3.2292e-01, 2.2965e+01, 5.3342e-01, 5.3551e-01]],</span></span><br><span class="line"><span class="string">       grad_fn=&lt;MulBackward0&gt;)</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p>手动计算梯度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gradf(x) </span><br><span class="line">tensor([[<span class="number">-0.0791</span>,  <span class="number">5.7351</span>, <span class="number">-0.4285</span>,  <span class="number">0.8841</span>],</span><br><span class="line">        [<span class="number">-0.0740</span>, <span class="number">53.4620</span>, <span class="number">-0.4462</span>, <span class="number">11.2205</span>],</span><br><span class="line">        [<span class="number">-0.4075</span>, <span class="number">47.4507</span>, <span class="number">-0.0703</span>, <span class="number">-0.0598</span>]], grad_fn=&lt;AddBackward0&gt;)</span><br></pre></td></tr></table></figure>
+
+<p>自动求导</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">y.backward(t.ones(y.size())) <span class="comment"># gradient形状与y一致</span></span><br><span class="line">x.grad</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">tensor([[-0.0791,  5.7351, -0.4285,  0.8841],</span></span><br><span class="line"><span class="string">        [-0.0740, 53.4620, -0.4462, 11.2205],</span></span><br><span class="line"><span class="string">        [-0.4075, 47.4507, -0.0703, -0.0598]])</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="计算图"><a href="#计算图" class="headerlink" title="计算图"></a>计算图</h3><p>PyTorch中<code>autograd</code>的底层采用了计算图，计算图是一种特殊的有向无环图（DAG），用于记录算子与变量之间的关系。一般用矩形表示算子，椭圆形表示变量。如表达式$𝐳 = 𝐰𝐱 + 𝐛 $可分解为$𝐲 = 𝐰𝐱$和$𝐳 = 𝐲 + 𝐛$，其计算图如下所示，图中<code>MUL</code>，<code>ADD</code>都是算子，𝐰，𝐱，𝐛即变量。</p>
+<p><img src="/img/DeepLearning/com_graph.svg" alt=""></p>
+<p>对$z=wx+b$进行求导</p>
+<p>$${\partial z \over \partial b} = 1,\space {\partial z \over \partial y} = 1\<br>{\partial y \over \partial w }= x,{\partial y \over \partial x}= w\<br>{\partial z \over \partial x}= {\partial z \over \partial y} {\partial y \over \partial x}=1 * w\<br>{\partial z \over \partial w}= {\partial z \over \partial y} {\partial y \over \partial w}=1 * x\$$</p>
+<p>在反向传播中非叶子节点的导数计算完成后立即被清空如果想要查看这些变量可以使用使用autograd.grad函数或者hook</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一种方法：使用grad获取中间变量的梯度</span></span><br><span class="line">x = t.ones(<span class="number">3</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">w = t.rand(<span class="number">3</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = x * w</span><br><span class="line">z = y.sum()</span><br><span class="line"><span class="comment"># z对y的梯度，隐式调用backward()</span></span><br><span class="line">print(t.autograd.grad(z, y))</span><br><span class="line">print(t.autograd.grad(z,x))</span><br><span class="line"><span class="comment"># print(t.autograd.grad(z,w))</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第二种方法：使用hook</span></span><br><span class="line"><span class="comment"># hook是一个函数，输入是梯度，不应该有返回值</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">variable_hook</span><span class="params">(grad)</span>:</span></span><br><span class="line">    print(<span class="string">'y的梯度：'</span>,grad)</span><br><span class="line"></span><br><span class="line">x = t.ones(<span class="number">3</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">w = t.rand(<span class="number">3</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = x * w</span><br><span class="line"><span class="comment"># 注册hook</span></span><br><span class="line">hook_handle = y.register_hook(variable_hook)</span><br><span class="line">z = y.sum()</span><br><span class="line">z.backward()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 除非你每次都要用hook，否则用完之后记得移除hook</span></span><br><span class="line">hook_handle.remove()</span><br></pre></td></tr></table></figure>
+
+<h3 id="扩展autograd"><a href="#扩展autograd" class="headerlink" title="扩展autograd"></a>扩展autograd</h3><p>自定义autograd实现反向求导</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mul</span><span class="params">(Function)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(ctx, w, x, b, x_requires_grad = True)</span>:</span></span><br><span class="line">        ctx.x_requires_grad = x_requires_grad</span><br><span class="line">        ctx.save_for_backward(w,x)</span><br><span class="line">        output = w * x + b</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(ctx, grad_output)</span>:</span></span><br><span class="line">        w,x = ctx.saved_tensors</span><br><span class="line">        grad_w = grad_output * x</span><br><span class="line">        <span class="keyword">if</span> ctx.x_requires_grad:</span><br><span class="line">            grad_x = grad_output * w</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            grad_x = <span class="literal">None</span></span><br><span class="line">        grad_b = grad_output * <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> grad_w, grad_x, grad_b, <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>自定义的Function需要继承autograd.Function，没有构造函数<code>__init__</code>，forward和backward函数都是静态方法</p>
+<p>backward函数的输出和forward函数的输入一一对应，backward函数的输入和forward函数的输出一一对应</p>
+<p>backward函数的grad_output参数即t.autograd.backward中的<code>grad_variables</code></p>
+<p>如果某一个输入不需要求导，直接返回None，如forward中的输入参数x_requires_grad显然无法对它求导，直接返回None即可</p>
+<p>反向传播可能需要利用前向传播的某些中间结果，需要进行保存，否则前向传播结束后这些对象即被释放</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.democpp.cn/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/" title="pytorch02自动求导" target="_blank" rel="external">http://www.democpp.cn/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/liaoxianfu" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/liaoxianfu" target="_blank"><span class="text-dark">过不去的过去</span><small class="ml-1x">JPG程序猿</small></a></h3>
+        <div>努力学习Java、Python、Go，爱折腾，目前是在校生。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/11/pytorch03%20%E5%B8%B8%E8%A7%81%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" title="常见神经网络"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/05/30/Pytorch%20tensor%E6%93%8D%E4%BD%9C/" title="Pytorch tensor操作"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2020 xianfu liao
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:www.democpp.cn ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
