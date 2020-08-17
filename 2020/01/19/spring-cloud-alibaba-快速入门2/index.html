@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>spring cloud alibaba 快速入门2 | liaoxianfu&#39;s blog</title>
+  <meta name="description" content="spring cloud alibaba快速入门 （二）Sentinel负载均衡和流量监控1、sentinel控制台从https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;Sentinel&#x2F;releases下载最新版的控制台jar包。 执行 1java -Dserver.port&#x3D;8080 -Dcsp.sentinel.dashboard.server&#x3D;localhost:8080 -Dproje">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring cloud alibaba 快速入门2">
+<meta property="og:url" content="http://www.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="spring cloud alibaba快速入门 （二）Sentinel负载均衡和流量监控1、sentinel控制台从https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;Sentinel&#x2F;releases下载最新版的控制台jar包。 执行 1java -Dserver.port&#x3D;8080 -Dcsp.sentinel.dashboard.server&#x3D;localhost:8080 -Dproje">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.democpp.cn/img/springcloudalibaba/image-20200105114755793.png">
+<meta property="og:image" content="http://www.democpp.cn/img/springcloudalibaba/image-20200105142921036.png">
+<meta property="og:image" content="http://www.democpp.cn/img/springcloudalibaba/image-20200105143055338.png">
+<meta property="og:image" content="http://www.democpp.cn/img/springcloudalibaba/image-20200105144528412.png">
+<meta property="article:published_time" content="2020-01-19T07:00:31.000Z">
+<meta property="article:modified_time" content="2020-01-19T07:01:33.474Z">
+<meta property="article:author" content="xianfu liao">
+<meta property="article:tag" content="springcloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.democpp.cn/img/springcloudalibaba/image-20200105114755793.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="liaoxianfu&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/liaoxianfu" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">过不去的过去</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">JPG程序猿</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> HeNan, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form" method="GET" action="https://www.baidu.com/s?">
+	<div class="input-group">
+    	<input name="wd" type="text" class="form-control search-form-input" placeholder="搜索" />
+	    <span class="input-group-btn">
+	    	<button type="submit" class=" btn btn-flat search-form-submit"><i class="icon icon-search"></i></button>
+	    </span>
+    </div>
+</form>
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>努力学习JPG</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Pytorch/">Pytorch</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/">bigData</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/HDFS/">HDFS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/MapReduce/">MapReduce</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigData/hive/">hive</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/ArrayList/">ArrayList</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-security/">spring security</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring-security/spring-boot/">spring boot</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/springcloud/">springcloud</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ArrayList/" rel="tag">ArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/" rel="tag">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pytorch/" rel="tag">Pytorch</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZooKeeper/" rel="tag">ZooKeeper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bingData/" rel="tag">bingData</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashSet/" rel="tag">hashSet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/" rel="tag">springcloud</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ArrayList/" style="font-size: 13px;">ArrayList</a> <a href="/tags/HDFS/" style="font-size: 13px;">HDFS</a> <a href="/tags/MapReduce/" style="font-size: 13px;">MapReduce</a> <a href="/tags/Pytorch/" style="font-size: 13.5px;">Pytorch</a> <a href="/tags/ZooKeeper/" style="font-size: 13px;">ZooKeeper</a> <a href="/tags/bingData/" style="font-size: 13px;">bingData</a> <a href="/tags/c/" style="font-size: 13px;">c++</a> <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hashSet/" style="font-size: 13px;">hashSet</a> <a href="/tags/hive/" style="font-size: 13px;">hive</a> <a href="/tags/java/" style="font-size: 13.5px;">java</a> <a href="/tags/mysql/" style="font-size: 13px;">mysql</a> <a href="/tags/springcloud/" style="font-size: 14px;">springcloud</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/08/17/Zookeeper%E5%AD%A6%E4%B9%A0/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/bigData/">bigData</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/17/Zookeeper%E5%AD%A6%E4%B9%A0/" class="title">Zookeeper学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-17T08:15:51.000Z" itemprop="datePublished">2020-08-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/06/12/vector%E5%B8%B8%E7%94%A8Api/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/c/">c++</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/12/vector%E5%B8%B8%E7%94%A8Api/" class="title">vector常用Api</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-12T10:35:16.000Z" itemprop="datePublished">2020-06-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/06/11/pytorch03%20%E5%B8%B8%E8%A7%81%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Pytorch/">Pytorch</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/11/pytorch03%20%E5%B8%B8%E8%A7%81%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="title">常见神经网络</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-11T08:15:20.000Z" itemprop="datePublished">2020-06-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Pytorch/">Pytorch</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/11/pytorch02%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/" class="title">pytorch02自动求导</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-11T08:11:02.000Z" itemprop="datePublished">2020-06-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2020/05/30/Pytorch%20tensor%E6%93%8D%E4%BD%9C/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Pytorch/">Pytorch</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/30/Pytorch%20tensor%E6%93%8D%E4%BD%9C/" class="title">Pytorch tensor操作</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-30T08:35:18.000Z" itemprop="datePublished">2020-05-30</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#spring-cloud-alibaba快速入门-（二）"><span class="toc-number">1.</span> <span class="toc-text">spring cloud alibaba快速入门 （二）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sentinel负载均衡和流量监控"><span class="toc-number">1.1.</span> <span class="toc-text">Sentinel负载均衡和流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、sentinel控制台"><span class="toc-number">1.1.1.</span> <span class="toc-text">1、sentinel控制台</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、在springcloud-中引入sentinel"><span class="toc-number">1.1.2.</span> <span class="toc-text">2、在springcloud 中引入sentinel</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1、服务提供者引入"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1、服务提供者引入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2、服务消费者引入（对feign的支持）"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">2.2、服务消费者引入（对feign的支持）</span></a></li></ol></li></ol></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-spring-cloud-alibaba-快速入门2" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      spring cloud alibaba 快速入门2
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/" class="article-date">
+	  <time datetime="2020-01-19T07:00:31.000Z" itemprop="datePublished">2020-01-19</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/springcloud/">springcloud</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/springcloud/" rel="tag">springcloud</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="spring-cloud-alibaba快速入门-（二）"><a href="#spring-cloud-alibaba快速入门-（二）" class="headerlink" title="spring cloud alibaba快速入门 （二）"></a>spring cloud alibaba快速入门 （二）</h2><h3 id="Sentinel负载均衡和流量监控"><a href="#Sentinel负载均衡和流量监控" class="headerlink" title="Sentinel负载均衡和流量监控"></a>Sentinel负载均衡和流量监控</h3><h4 id="1、sentinel控制台"><a href="#1、sentinel控制台" class="headerlink" title="1、sentinel控制台"></a>1、sentinel控制台</h4><p>从<a href="https://github.com/alibaba/Sentinel/releases下载最新版的控制台jar包。" target="_blank" rel="noopener">https://github.com/alibaba/Sentinel/releases下载最新版的控制台jar包。</a></p>
+<p>执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-版本号.jar</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="http://127.0.0.1:8080/" target="_blank" rel="noopener">http://127.0.0.1:8080/</a></p>
+<p>用户名和密码都是<code>sentinel</code></p>
+<p><img src="/img/springcloudalibaba/image-20200105114755793.png" alt="image-20200105114755793"></p>
+<p>证明创建成功。</p>
+<h4 id="2、在springcloud-中引入sentinel"><a href="#2、在springcloud-中引入sentinel" class="headerlink" title="2、在springcloud 中引入sentinel"></a>2、在springcloud 中引入sentinel</h4><h5 id="2-1、服务提供者引入"><a href="#2-1、服务提供者引入" class="headerlink" title="2.1、服务提供者引入"></a>2.1、服务提供者引入</h5><p>在<code>spring-cloud-alibaba-service-provider</code>中添加pom</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在需要进行限流的地方使用<code>@SentinelResource</code> 注解用来标识资源是否被限流、降级。</p>
+<p>在<code>spring-cloud-alibaba-service-provider</code>中添加配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.liao.spring.cloud.service.provider.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.annotation.SentinelResource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/test"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;user.name:liao&#125;"</span>)</span><br><span class="line">    String name;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;user.age:12&#125;"</span>)</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="comment">/*增加的修改，测试develop配置是否加载*/</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;env:none&#125;"</span>)</span><br><span class="line">    String env;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Sentinel 引入流量监控*/</span></span><br><span class="line">    <span class="meta">@SentinelResource</span>(<span class="string">"hello"</span>)</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/hello/&#123;info&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String info)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"hello:"</span> + info + <span class="string">": "</span> + name + <span class="string">": "</span> + age + <span class="string">"当前的环境为："</span> + env;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在application.yml中增加配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">sentinel:</span></span><br><span class="line">      <span class="attr">transport:</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">8719</span></span><br><span class="line">        <span class="attr">dashboard:</span> <span class="string">localhost:8080</span> <span class="comment">#sentinel的控制台地址</span></span><br></pre></td></tr></table></figure>
+
+<p>先访问一下<a href="http://localhost:10000/test/hello/123让sentinel中的先进行注册。在sentinel中" target="_blank" rel="noopener">http://localhost:10000/test/hello/123让sentinel中的先进行注册。在sentinel中</a></p>
+<p><img src="/img/springcloudalibaba/image-20200105142921036.png" alt="image-20200105142921036"></p>
+<p>监控成功。</p>
+<p><img src="/img/springcloudalibaba/image-20200105143055338.png" alt="image-20200105143055338"></p>
+<p>可以对对应的链路进行对应的操作。</p>
+<h5 id="2-2、服务消费者引入（对feign的支持）"><a href="#2-2、服务消费者引入（对feign的支持）" class="headerlink" title="2.2、服务消费者引入（对feign的支持）"></a>2.2、服务消费者引入（对feign的支持）</h5><p>同理在<code>spring-cloud-alibaba-service-consumer</code>中添加依赖 因为之前在feign中进行熔断的时候需要sentinel所以无需再进行引入</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--feign--&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.1.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!--熔断与流量监控--&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在配置文件application.yml中添加</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">sentinel:</span></span><br><span class="line">      <span class="attr">transport:</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">8719</span></span><br><span class="line">        <span class="attr">dashboard:</span> <span class="string">localhost:8080</span> <span class="comment">#sentinel的控制台地址</span></span><br></pre></td></tr></table></figure>
+
+<p>重启服务，访问<a href="http://localhost:11000/test/hello/1" target="_blank" rel="noopener">http://localhost:11000/test/hello/1</a></p>
+<p>查看sentinel 如图：</p>
+<p><img src="/img/springcloudalibaba/image-20200105144528412.png" alt="image-20200105144528412"></p>
+<p>在这里引入成功</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/" title="spring cloud alibaba 快速入门2" target="_blank" rel="external">http://www.democpp.cn/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A82/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/liaoxianfu" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/liaoxianfu" target="_blank"><span class="text-dark">过不去的过去</span><small class="ml-1x">JPG程序猿</small></a></h3>
+        <div>努力学习Java、Python、Go，爱折腾，研究生。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A83/" title="spring cloud alibaba 快速入门3"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/01/19/spring-cloud-alibaba-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A81/" title="spring cloud alibaba 快速入门1"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/img/pay/ali.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/img/pay/wx.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/liaoxianfu" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2020 xianfu liao
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:www.democpp.cn ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
