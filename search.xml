@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Linux下使用Typora与Picgo实现GitHub图床</title>
+      <link href="/2021/07/01/Linux%E4%B8%8B%E4%BD%BF%E7%94%A8Typora%E4%B8%8EPicgo%E5%AE%9E%E7%8E%B0GitHub%E5%9B%BE%E5%BA%8A/"/>
+      <url>/2021/07/01/Linux%E4%B8%8B%E4%BD%BF%E7%94%A8Typora%E4%B8%8EPicgo%E5%AE%9E%E7%8E%B0GitHub%E5%9B%BE%E5%BA%8A/</url>
+      
+        <content type="html"><![CDATA[<p>最新版本的typora实现了利用PicGo自动上传图片的功能，但是基本上都是介绍在Windows下如何使用的，很少介绍如何在Linux下使用。经过摸索实现了typora+picgo+github通过代理实现图床的功能。</p><h2 id="1、Typora"><a href="#1、Typora" class="headerlink" title="1、Typora"></a>1、Typora</h2><p>不同的发行版有不同的安装方法，也可以在官网直接下载二进制文件使用。官网地址<a href="https://typora.io/%E3%80%82">https://typora.io/。</a></p><h2 id="2、Picgo"><a href="#2、Picgo" class="headerlink" title="2、Picgo"></a>2、Picgo</h2><p>官网提供的<code>picgo-appimage</code>在我的Archlinux下无法正常运行，无法打开界面。而且看起来不太好与Typora整合，因此选择了node.js下的picgo包。</p><h3 id="2-1-node环境安装"><a href="#2-1-node环境安装" class="headerlink" title="2.1 node环境安装"></a>2.1 node环境安装</h3><p>首先安装nodejs，下载地址<a href="https://nodejs.org/en/%E3%80%82%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E5%B0%B1%E6%98%AF%E8%A7%A3%E5%8E%8B%E9%85%8D%E7%BD%AE%E5%A5%BD%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8D%B3%E5%8F%AF%EF%BC%88%E5%85%B7%E4%BD%93%E5%8F%AF%E8%87%AA%E8%A1%8C%E7%99%BE%E5%BA%A6%EF%BC%89%E3%80%82%E6%8E%A5%E7%9D%80%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85%E7%9A%84%60cnpm%60%E3%80%82%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80">https://nodejs.org/en/。安装方法就是解压配置好环境变量即可（具体可自行百度）。接着配置国内的`cnpm`。参考地址</a> <a href="https://developer.aliyun.com/mirror/NPM%E3%80%82">https://developer.aliyun.com/mirror/NPM。</a></p><h3 id="2-2-全局安装picgo"><a href="#2-2-全局安装picgo" class="headerlink" title="2.2 全局安装picgo"></a>2.2 全局安装picgo</h3><p>执行以下命令</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install picgo -g <span class="comment">#需要配置cnpm</span></span><br></pre></td></tr></table></figure><p>安装好后，重新打开一个终端 能够找到<code>picgo</code>命令即可。</p><h2 id="3-配置GitHub"><a href="#3-配置GitHub" class="headerlink" title="3 配置GitHub"></a>3 配置GitHub</h2><p>a、创建一个新的仓库</p><p><strong>注意必须初始化</strong></p><p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611491794.png"></p><p>b、创建私钥</p><p>在你的账户下的设置里选择<code>Developer settings</code>-&gt;<code>Personal access tokens</code>新建一个</p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611491890.png" style="zoom:50%;" /><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611492053.png" style="zoom:50%;" /><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611492159.png" style="zoom:50%;" /><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611492358.png" style="zoom:50%;" /><p>这样会生成一段token 这个值只显示一次所以必须保存好，下面会用到。</p><p>c. 配置picgo</p><p>在终端下执行,会出现选项卡，通过键盘的方向建选择Github，回车确定</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">picgo <span class="built_in">set</span> uploader</span><br></pre></td></tr></table></figure><p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611492765.png"></p><p>依次填入信息即可<img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611492879.png"></p><p><strong>（1）repo</strong></p><p>repo就是你<code>用户名/仓库名</code> 例如刚才创建了demo_img 我的用户名为<code>liaoxianfu</code>那么就是<code>liaoxianfu/demo_img</code></p><p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611491794.png"> </p><p>（2）branch为main （之前的是master，但是从2021年GitHub改成了main）</p><p>（3）token就是之前让你创建token时保存下来的那一串token</p><p>（4）path 就是你上传图片在你仓库保存的位置</p><p>（5）customUrl 国内是不能访问github的文件服务的，需要进行CDN加速访问，这里使用<code>https://cdn.jsdelivr.net/gh/用户名/仓库名</code>配置</p><p>配置好后使用github作为图床</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">picgo use uploader</span><br></pre></td></tr></table></figure><p>选择GitHub即可。</p><p>在终端下使用上传命令测试以下能不能正常上传，正常上传口会出现PicGo SUCCESS 的标志和返回的访问url</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">picgo upload 图片地址</span><br></pre></td></tr></table></figure><p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611493714.png"></p><p>4、整合Typora和Picgo</p><p>在Typora的文件选项卡的偏好设置的图像选项中将插入图片时选择上传图片，上传服务选择<code>Custom Command</code>命令设置为<code>picgo upload</code>即可</p><p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/1611493860.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> hexo </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> hexo </tag>
+            
+            <tag> Linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>mysql索引</title>
       <link href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/"/>
       <url>/2021/06/30/mysql%E7%B4%A2%E5%BC%95/</url>
