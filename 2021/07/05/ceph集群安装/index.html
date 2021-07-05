@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Java Python Go Hadoop Spark 博客"><title>ceph集群安装 | liaoxianfu's blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">ceph集群安装</h1><a id="logo" href="/.">liaoxianfu's blog</a><p class="description">Java Go 学习</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 存档</i></a><a href="/about/"><i class="fa fa-user"> 关于我</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">ceph集群安装</h1><div class="post-meta">2021-07-05<span> | </span><span class="category"><a href="/categories/ceph/">ceph</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%BF%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE"><span class="toc-text">宿主机配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90"><span class="toc-text">更换国内源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8epel%E6%BA%90"><span class="toc-text">启用epel源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8ceph%E6%BA%90"><span class="toc-text">启用ceph源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%9D%99%E6%80%81IP"><span class="toc-text">修改静态IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ntp"><span class="toc-text">安装ntp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4"><span class="toc-text">安装集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%9B%86%E7%BE%A4%E9%9D%99%E6%80%81ip"><span class="toc-text">修改集群静态ip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-text">设置主机名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%85%8D%E5%AF%86%E7%99%BB%E9%99%86"><span class="toc-text">设置免密登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%ADselinux%E5%92%8C%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">关闭selinux和防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ntp%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5"><span class="toc-text">ntp时间同步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2ceph"><span class="toc-text">部署ceph</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAmgr"><span class="toc-text">创建mgr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0osds"><span class="toc-text">添加osds</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2mds"><span class="toc-text">部署mds</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0manager"><span class="toc-text">添加manager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BArgw%E5%AE%9E%E4%BE%8B"><span class="toc-text">创建rgw实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8-%E6%A3%80%E7%B4%A2%E5%AF%B9%E8%B1%A1%E6%95%B0%E6%8D%AE"><span class="toc-text">存储&#x2F;检索对象数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%98%E5%82%A8%E6%B1%A0"><span class="toc-text">创建存储池</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dashboard"><span class="toc-text">dashboard</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEip%E4%B8%8Eport"><span class="toc-text">设置ip与port</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7"><span class="toc-text">设置登陆用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8rgw"><span class="toc-text">启用rgw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEcephFs"><span class="toc-text">配置cephFs</span></a></li></ol></li></ol></div></div><div class="post-content"><p>使用ceph deploy进行安装</p>
+<p>在虚拟机下进行安装，选用的操作系统为centos7.9</p>
+<p>宿主机配置如下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702153730970.png" alt="image-20210702153730970"></p>
+<p>使用双网卡，2核2G</p>
+<p>以这台虚拟机作为宿主机器进行链接克隆，这样可以先在宿主机上修改好国内源，克隆的机器就不需要再进行修改了。</p>
+<h2 id="宿主机配置">宿主机配置</h2>
+<p>更新系统</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br></pre></td></tr></table></figure>
+<h3 id="更换国内源">更换国内源</h3>
+<p>centos 可以自己寻找最快的源进行更新下载，但是为了后面的统一，将源更换为华为云。（阿里云镜像站一直在升级，所以选择了华为云）。</p>
+<p>1、备份配置文件：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -a /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
+<p>2、修改<strong>CentOS-Base.repo</strong>文件，取消<strong>baseurl</strong>开头的行的注释，并增加<strong>mirrorlist</strong>开头的行的注释。将文件中的<strong><a target="_blank" rel="noopener" href="http://mirror.centos.org">http://mirror.centos.org</a></strong>替换成<strong><a target="_blank" rel="noopener" href="https://repo.huaweicloud.com">https://repo.huaweicloud.com</a></strong>，可以参考如下命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/#baseurl/baseurl/g&quot;</span> /etc/yum.repos.d/CentOS-Base.repo</span><br><span class="line">sed -i <span class="string">&quot;s/mirrorlist=http/#mirrorlist=http/g&quot;</span> /etc/yum.repos.d/CentOS-Base.repo</span><br><span class="line">sed -i <span class="string">&quot;s@http://mirror.centos.org@https://repo.huaweicloud.com@g&quot;</span> /etc/yum.repos.d/CentOS-Base.repo</span><br></pre></td></tr></table></figure>
+<p>3、执行<strong>yum clean all</strong>清除原有yum缓存。</p>
+<p>4、执行<strong>yum makecache</strong>（刷新缓存）或者<strong>yum repolist all</strong>（查看所有配置可以使用的文件，会自动刷新缓存）。</p>
+<h3 id="启用epel源">启用epel源</h3>
+<p>1、安装epel</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release</span><br></pre></td></tr></table></figure>
+<p>2、配置备份文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp -a /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup</span><br><span class="line">mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup</span><br></pre></td></tr></table></figure>
+<p>3、修改<strong>epel.repo</strong>文件，取消<strong>baseurl</strong>开头的行的注释，并增加<strong>mirrorlist</strong>开头的行的注释。将文件中的<strong><a target="_blank" rel="noopener" href="http://download.fedoraproject.org/pub">http://download.fedoraproject.org/pub</a></strong>替换成<strong><a target="_blank" rel="noopener" href="https://repo.huaweicloud.com">https://repo.huaweicloud.com</a></strong>，可以参考如下命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/#baseurl/baseurl/g&quot;</span> /etc/yum.repos.d/epel.repo</span><br><span class="line">sed -i <span class="string">&quot;s/metalink/#metalink/g&quot;</span> /etc/yum.repos.d/epel.repo</span><br><span class="line">sed -i <span class="string">&quot;s@https\?://download.fedoraproject.org/pub@https://repo.huaweicloud.com@g&quot;</span> /etc/yum.repos.d/epel.repo</span><br></pre></td></tr></table></figure>
+<p>4、执行<strong>yum update</strong>更新。</p>
+<h3 id="启用ceph源">启用ceph源</h3>
+<p>安装ceph的repo</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh https://repo.huaweicloud.com/ceph/rpm-nautilus/el7/noarch/ceph-release-1-1.el7.noarch.rpm  <span class="comment"># 安装nautilus版本</span></span><br></pre></td></tr></table></figure>
+<p>修改为华为源</p>
+<p>vim  /etc/yum.repos.d/ceph.repo</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[Ceph]</span><br><span class="line">name=Ceph packages <span class="keyword">for</span> <span class="variable">$basearch</span></span><br><span class="line">baseurl=https://repo.huaweicloud.com/ceph/rpm-nautilus/el7/<span class="variable">$basearch</span></span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line"><span class="built_in">type</span>=rpm-md</span><br><span class="line">gpgkey=https://repo.huaweicloud.com/ceph/keys/release.asc</span><br><span class="line"></span><br><span class="line">[Ceph-noarch]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=https://repo.huaweicloud.com/ceph/rpm-nautilus/el7/noarch</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line"><span class="built_in">type</span>=rpm-md</span><br><span class="line">gpgkey=https://repo.huaweicloud.com/ceph/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-source]</span><br><span class="line">name=Ceph <span class="built_in">source</span> packages</span><br><span class="line">baseurl=https://repo.huaweicloud.com/ceph/rpm-nautilus/el7/SRPMS</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line"><span class="built_in">type</span>=rpm-md</span><br><span class="line">gpgkey=https://repo.huaweicloud.com/ceph/keys/release.asc</span><br></pre></td></tr></table></figure>
+<h3 id="修改静态IP">修改静态IP</h3>
+<p>（根据自己的机器进行修改 这里公开网卡为192.168.77.0/24 望断 内部网卡为192.168.88.0/24网段）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install net-tools <span class="comment"># 可以使用ifconfig进行查看ip信息</span></span><br></pre></td></tr></table></figure>
+<p>查看网卡为ens33和ens34</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702161509080.png" alt="image-20210702161509080"></p>
+<p>进行修改<strong>要根据自己的网卡情况进行修改</strong></p>
+<p>例如我的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702162712264.png" alt="image-20210702162712264"></p>
+<p>vi /etc/sysconfig/network-scripts/ifcfg-ens33</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704143342586.png" alt="image-20210704143342586"></p>
+<p>vi /etc/sysconfig/network-scripts/ifcfg-ens34</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704150048741.png" alt="image-20210704150048741"></p>
+<p><strong>修改完成后需要进行重启</strong></p>
+<h3 id="安装ntp">安装ntp</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install ntp ntpdate ntp-doc</span><br></pre></td></tr></table></figure>
+<p>设置开启自启动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> chronyd <span class="comment">#关闭chronyd 否则无法开机自启动</span></span><br><span class="line">systemctl restart ntpd</span><br><span class="line">systemctl <span class="built_in">enable</span> ntpd</span><br></pre></td></tr></table></figure>
+<p>查询</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpq -p</span><br></pre></td></tr></table></figure>
+<h2 id="安装集群">安装集群</h2>
+<p>将宿主机进行链接克隆,克隆机器ceph1、ceph2、ceph3</p>
+<p>集群规划</p>
+<table>
+<thead>
+<tr>
+<th>机器名称</th>
+<th>ip1</th>
+<th>ip2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ceph1</td>
+<td>192.168.77.101</td>
+<td>192.168.88.101</td>
+</tr>
+<tr>
+<td>ceph2</td>
+<td>192.168.77.102</td>
+<td>192.168.88.102</td>
+</tr>
+<tr>
+<td>ceph3</td>
+<td>192.168.77.103</td>
+<td>192.168.88.103</td>
+</tr>
+</tbody>
+</table>
+<h3 id="修改集群静态ip">修改集群静态ip</h3>
+<p>对ceph1进行静态IP修改</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702164641360.png" alt="image-20210702164641360"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702164804629.png" alt="image-20210702164804629"></p>
+<p>对ceph2 修改为（192.168.77.102 192.168.88.102）</p>
+<p>对ceph3 修改为（192.168.77.103 192.168.88.103）</p>
+<h3 id="设置主机名">设置主机名</h3>
+<p>分别为ceph1 ceph2 ceph3</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname ceph1 <span class="comment"># 在ceph1 192.168.77.101 上执行</span></span><br><span class="line">hostnamectl set-hostname ceph2 <span class="comment"># 在ceph2 192.168.77.102 上执行</span></span><br><span class="line">hostnamectl set-hostname ceph3 <span class="comment"># 在ceph3 192.168.77.103 上执行</span></span><br></pre></td></tr></table></figure>
+<p>在ceph1 ceph2 ceph3上设置机器名称映射</p>
+<p>vim /etc/hosts</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">192.168.77.101 ceph1</span><br><span class="line">192.168.77.102 ceph2</span><br><span class="line">192.168.77.103 ceph3</span><br></pre></td></tr></table></figure>
+<p>在三台机器上都能ping通</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ping ceph1</span><br><span class="line">ping ceph2</span><br><span class="line">ping ceph3</span><br></pre></td></tr></table></figure>
+<h3 id="设置免密登陆">设置免密登陆</h3>
+<p>在ceph1上进行免密 能都免密登陆ceph1 ceph2 ceph3</p>
+<p>在ceph1（192.168.77.101）上执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen </span><br></pre></td></tr></table></figure>
+<p>一路回车 生成公钥和私钥</p>
+<p>拷贝公钥到ceph1 ceph2 ceph3 根据提示输入root的用户密码即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id ceph1</span><br><span class="line">ssh-copy-id ceph2</span><br><span class="line">ssh-copy-id ceph3</span><br></pre></td></tr></table></figure>
+<p>分别执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ssh ceph1</span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">ssh ceph2</span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">ssh ceph3</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>中间不需要输入密码就成功了。</p>
+<h3 id="关闭selinux和防火墙">关闭selinux和防火墙</h3>
+<p>在ceph1 ceph2 ceph3下执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0 <span class="comment"># 临时关闭</span></span><br></pre></td></tr></table></figure>
+<p>vim /etc/selinux/config</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702171305744.png" alt="image-20210702171305744"></p>
+<p>ceph health</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld <span class="comment"># 临时关闭</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld <span class="comment"># 禁止开启自启动</span></span><br><span class="line">systemctl status firewalld <span class="comment">#查看状态</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702171540164.png" alt="image-20210702171540164"></p>
+<p><strong>修改后需要进行重启</strong></p>
+<p>重启之后进行查询(三台机器都要查询)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getenforce <span class="comment"># 查询防火墙</span></span><br><span class="line">systemctl status firewalld <span class="comment">#查询数据</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704160735830.png" alt="image-20210704160735830"></p>
+<h3 id="ntp时间同步">ntp时间同步</h3>
+<p>在<strong>三台机</strong>器上都启动ntp并允许自启动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart ntpd</span><br><span class="line">systemctl <span class="built_in">enable</span> ntpd</span><br></pre></td></tr></table></figure>
+<p>ceph ntp时间与外网同步 不需要进行设置</p>
+<p>将ceph2、ceph3上设置时间同步的为ceph1的时间</p>
+<p>在ceph2、ceph3上修改ntp配置文件</p>
+<p>vim /etc/ntp.conf</p>
+<p>将<strong>其他的时间服务器注释掉</strong></p>
+<p>并添加</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704162400044.png" alt="image-20210704162400044"></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> chronyd <span class="comment">#关闭chronyd 否则无法开机自启动</span></span><br><span class="line">server 192.168.77.101 iburst  <span class="comment"># 添加ceph1为主机</span></span><br><span class="line">restrict 192.168.77.101  nomodify notrap noquery <span class="comment">#允许修改</span></span><br></pre></td></tr></table></figure>
+<h2 id="部署ceph">部署ceph</h2>
+<p>在ceph1上安装ceph-deploy</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install ceph-deploy</span><br><span class="line">yum install python-pip</span><br></pre></td></tr></table></figure>
+<p>创建文件夹管理配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir my-cluster</span><br><span class="line"><span class="built_in">cd</span> my-cluster</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy new --public-network 192.168.77.0/24 --cluster-network 192.168.88.0/24 ceph1 <span class="comment"># 部署ceph1为monitor节点</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>由于官方文档中的自动安装会指向国外的源，因此我们使用<code>--no-adjust-repos</code>强制指定不需要更换源，使用我们自己的源</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy install --no-adjust-repos ceph1 ceph2 ceph3  <span class="comment">#--no-adjust-repos 需要指定不更换源 </span></span><br></pre></td></tr></table></figure>
+<p>部署monitor并创建密钥环</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy mon create-initial</span><br></pre></td></tr></table></figure>
+<p>将配置文件和密钥拷贝到其他节点 这样你就可以使用 ceph CLI，而不必在每次执行命令时指定监视器地址和 ceph.client.admin.keyring。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy admin ceph1 ceph2 ceph3</span><br></pre></td></tr></table></figure>
+<h3 id="创建mgr">创建mgr</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy mgr create ceph1</span><br></pre></td></tr></table></figure>
+<h3 id="添加osds">添加osds</h3>
+<p>在虚拟机上添加硬盘（不需要进行格式化等操作 直接挂载裸盘即可） 三台都进行挂载</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702175610805.png" alt="image-20210702175610805"></p>
+<p>使用fdisk进行查看</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702175934553.png" alt="image-20210702175934553"></p>
+<p>多了一块盘</p>
+<p>在ceph1 中的<strong>my-cluster</strong>文件夹上执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy osd create --data /dev/sdb ceph1</span><br><span class="line">ceph-deploy osd create --data /dev/sdb ceph2</span><br><span class="line">ceph-deploy osd create --data /dev/sdb ceph3</span><br></pre></td></tr></table></figure>
+<p>检查ceph的健康</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph health</span><br></pre></td></tr></table></figure>
+<p>如果出现</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702180519433.png" alt="image-20210702180519433"></p>
+<p>禁用ceph的不安全模式</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph config <span class="built_in">set</span> mon auth_allow_insecure_global_id_reclaim <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>在进行检查</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702180645979.png" alt="image-20210702180645979">rbd</p>
+<p>查看节点的信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph -s</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210702180741993.png" alt="image-20210702180741993"></p>
+<h3 id="部署mds">部署mds</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy mds create  ceph1</span><br></pre></td></tr></table></figure>
+<p>添加monitor</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy mon add ceph2 </span><br><span class="line">ceph-deploy mon add ceph3</span><br></pre></td></tr></table></figure>
+<p>添加新的 Ceph 监视器后，Ceph 将开始同步监视器并形成法定人数。您可以通过执行以下操作来检查仲裁状态：</p>
+<h3 id="添加manager">添加manager</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy mgr create ceph2</span><br><span class="line">ceph-deploy mgr create ceph3</span><br></pre></td></tr></table></figure>
+<h3 id="创建rgw实例">创建rgw实例</h3>
+<p>要使用 Ceph 的 Ceph 对象网关组件，您必须部署一个 RGW 实例。执行以下命令以创建 RGW 的新实例：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy rgw create ceph1</span><br></pre></td></tr></table></figure>
+<p>默认情况下rgw监听的是7480端口 可以通过修改ceph.conf配置文件进行端口的修改</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">rgw <span class="attr">frontends</span> = civetweb <span class="attr">port=80</span></span><br></pre></td></tr></table></figure>
+<h3 id="存储-检索对象数据">存储/检索对象数据</h3>
+<p>要将对象数据存储在 Ceph 存储集群中，Ceph 客户端必须： 1、设置一个对象名称 2、指定存储池</p>
+<p>Ceph Client 检索最新的集群映射，CRUSH 算法计算如何将对象映射到归置组，然后动态计算如何将归置组分配给 Ceph OSD Daemon。要查找对象位置，您只需要对象名称和池名称。例如：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd map &#123;poolname&#125; &#123;object-name&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="创建存储池">创建存储池</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create <span class="built_in">test</span> 2</span><br></pre></td></tr></table></figure>
+<h2 id="dashboard">dashboard</h2>
+<h3 id="安装">安装</h3>
+<p>首先确定是否安装了包(所有节点都需要安装)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install ceph-mgr-dashboard -y</span><br></pre></td></tr></table></figure>
+<p>启动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph mgr module <span class="built_in">enable</span> dashboard</span><br></pre></td></tr></table></figure>
+<p>禁止https</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph config set mgr mgr/dashboard/ssl false</span><br></pre></td></tr></table></figure>
+<h3 id="设置ip与port">设置ip与port</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph config <span class="built_in">set</span> mgr mgr/dashboard/server_addr 192.168.77.101</span><br><span class="line">ceph config <span class="built_in">set</span> mgr mgr/dashboard/server_port 8080</span><br></pre></td></tr></table></figure>
+<h3 id="设置登陆用户">设置登陆用户</h3>
+<p>创建一个包含密码的文件mypass 写入你的密码</p>
+<p>之后就可以使用用户和密码进行登陆</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph dashboard ac-user-create &lt;username&gt;  administrator -i &lt;password_path&gt;</span><br><span class="line">ceph dashboard ac-user-create liao administrator -i mypass</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704174247727.png" alt="image-20210704174247727"></p>
+<h3 id="启用rgw">启用rgw</h3>
+<p>Ceph Dashboard默认安装好后，没有启用rgw,需要手工Dashboard中启用RGW</p>
+<p>创建账户</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">radosgw-admin user create --uid=rgw --display-name=rgw --system</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704174454142.png" alt="image-20210704174454142"></p>
+<p>记下输出的access_key 和 secret_key的值，当初没有记下也可以通过以下命令查看(可选)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">radosgw-admin user info --uid=rgw</span><br></pre></td></tr></table></figure>
+<p>将<code>access_key</code>和<code>secret_key</code>的值分别保存在<code>access_key</code>和<code>secret_key</code>两个文件中</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph dashboard set-rgw-api-access-key -i access_key</span><br><span class="line">ceph dashboard set-rgw-api-secret-key -i secret_key </span><br></pre></td></tr></table></figure>
+<p>这样就可以正常访问了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210704175046847.png" alt="image-20210704175046847"></p>
+<h3 id="配置cephFs">配置cephFs</h3>
+<p>创建元数据pool和数据pool</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create cephfs_data 8 <span class="comment">#创建数据pool</span></span><br><span class="line">ceph osd pool create cephfs_metadata  8 <span class="comment">#创建元数据pool</span></span><br></pre></td></tr></table></figure>
+<p>创建文件系统</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph fs new cephfs cephfs_metadata cephfs_data</span><br></pre></td></tr></table></figure>
+<p>查看状态</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ceph mds <span class="built_in">stat</span></span><br></pre></td></tr></table></figure>
+</div><div class="tags"><a href="/tags/ceph/"><i class="fa fa-tag"></i>ceph</a></div><div class="post-nav"><a class="pre" href="/2021/07/05/cephFs-ceph%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">cephFs-ceph文件系统</a><a class="next" href="/2021/07/05/ceph/">ceph</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"/><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ceph/">ceph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker-compose/">docker-compose</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15px;">并发</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/spring-cloud/" style="font-size: 15px;">spring cloud</a> <a href="/tags/spring-security/" style="font-size: 15px;">spring security</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 15px;">容器</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/docker-compose/" style="font-size: 15px;">docker-compose</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 15px;">事务</a> <a href="/tags/%E7%B4%A2%E5%BC%95/" style="font-size: 15px;">索引</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ceph/" style="font-size: 15px;">ceph</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs%E5%9D%97%E5%AD%98%E5%82%A8/">cephFs块存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-pool%E6%93%8D%E4%BD%9C/">cephFs-pool操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-ceph%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">cephFs-ceph文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/">ceph集群安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph/">ceph</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/01/Linux%E4%B8%8B%E4%BD%BF%E7%94%A8Typora%E4%B8%8EPicgo%E5%AE%9E%E7%8E%B0GitHub%E5%9B%BE%E5%BA%8A/">Linux下使用Typora与Picgo实现GitHub图床</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/">mysql事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E5%9F%BA%E7%A1%80/">mysql基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/docker-compose%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">docker-compose基础入门</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/liaoxianfu" title="liaoxianfu's github" target="_blank">liaoxianfu's github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">liaoxianfu's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><link rel="stylesheet" type="text/css" href="/css/search.css?v=1.0.0"><script type="text/javascript" src="/js/search.js?v=1.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/love.js"></script><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
