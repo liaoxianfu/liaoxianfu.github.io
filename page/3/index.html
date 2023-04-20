@@ -312,7 +312,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2020/01/08/05-spring%20security%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2020/01/08/04-spring%20security%20%E5%9B%BE%E7%89%87%E9%AA%8C%E8%AF%81%E7%A0%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -326,7 +326,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/01/08/05-spring%20security%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="post-title-link" itemprop="url">05-自动登录</a>
+            <a href="/2020/01/08/04-spring%20security%20%E5%9B%BE%E7%89%87%E9%AA%8C%E8%AF%81%E7%A0%81/" class="post-title-link" itemprop="url">04-图片验证码</a>
         </h2>
 
         <div class="post-meta">
@@ -343,7 +343,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-04-20 14:31:18" itemprop="dateModified" datetime="2023-04-20T14:31:18+08:00">2023-04-20</time>
+                <time title="修改时间：2023-04-20 14:31:15" itemprop="dateModified" datetime="2023-04-20T14:31:15+08:00">2023-04-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -366,16 +366,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="自动登录">自动登录</h3>
-<p>自动登录的原理是将用户的登录信息保存在用户浏览器的cookie中，当用户下次访问时实现自动校验并建立登录状态的一种机制。</p>
-<p>Spring Security 提供了两种令牌机制</p>
-<ul>
-<li>用散列算法加密用户必要的登录信息并生成令牌</li>
-<li>数据库等持久化存储机制持久化令牌</li>
-</ul>
+          <h3 id="图片验证码">图片验证码</h3>
+<p>为了防止恶意用户无限制的重试，往往在登录页面引入验证码机制。我们在<code>learn-03</code>项目的基础上进行改进引入验证码。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/01/08/05-spring%20security%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/#more" rel="contents">
+              <a class="btn" href="/2020/01/08/04-spring%20security%20%E5%9B%BE%E7%89%87%E9%AA%8C%E8%AF%81%E7%A0%81/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -483,6 +478,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2020/01/08/05-spring%20security%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="liaoxianfu">
+      <meta itemprop="description" content="Java Python Go Hadoop Spark 博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liaoxianfu's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/08/05-spring%20security%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="post-title-link" itemprop="url">05-自动登录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-08 12:54:47" itemprop="dateCreated datePublished" datetime="2020-01-08T12:54:47+08:00">2020-01-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-20 14:31:18" itemprop="dateModified" datetime="2023-04-20T14:31:18+08:00">2023-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="自动登录">自动登录</h3>
+<p>自动登录的原理是将用户的登录信息保存在用户浏览器的cookie中，当用户下次访问时实现自动校验并建立登录状态的一种机制。</p>
+<p>Spring Security 提供了两种令牌机制</p>
+<ul>
+<li>用散列算法加密用户必要的登录信息并生成令牌</li>
+<li>数据库等持久化存储机制持久化令牌</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/08/05-spring%20security%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2020/01/08/07-%E5%88%86%E5%B8%83%E5%BC%8FSession/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -542,88 +624,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/01/08/07-%E5%88%86%E5%B8%83%E5%BC%8FSession/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2020/01/08/04-spring%20security%20%E5%9B%BE%E7%89%87%E9%AA%8C%E8%AF%81%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="liaoxianfu">
-      <meta itemprop="description" content="Java Python Go Hadoop Spark 博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="liaoxianfu's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/08/04-spring%20security%20%E5%9B%BE%E7%89%87%E9%AA%8C%E8%AF%81%E7%A0%81/" class="post-title-link" itemprop="url">04-图片验证码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-08 12:54:47" itemprop="dateCreated datePublished" datetime="2020-01-08T12:54:47+08:00">2020-01-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-04-20 14:31:15" itemprop="dateModified" datetime="2023-04-20T14:31:15+08:00">2023-04-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="图片验证码">图片验证码</h3>
-<p>为了防止恶意用户无限制的重试，往往在登录页面引入验证码机制。我们在<code>learn-03</code>项目的基础上进行改进引入验证码。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/08/04-spring%20security%20%E5%9B%BE%E7%89%87%E9%AA%8C%E8%AF%81%E7%A0%81/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
