@@ -1,4 +1,214 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Java Python Go Hadoop Spark 博客"><title>go面向对象编程 | liaoxianfu's blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">go面向对象编程</h1><a id="logo" href="/.">liaoxianfu's blog</a><p class="description">Java Go 学习</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 存档</i></a><a href="/about/"><i class="fa fa-user"> 关于我</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">go面向对象编程</h1><div class="post-meta">2020-10-19<span> | </span><span class="category"><a href="/categories/go/">go</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="toc-text">面向对象编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F"><span class="toc-text">1、类型系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E4%B8%BA%E7%B1%BB%E5%9E%8B%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95"><span class="toc-text">1.1 为类型添加方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E5%80%BC%E8%AF%AD%E4%B9%89%E5%92%8C%E5%BC%95%E7%94%A8%E8%AF%AD%E4%B9%89"><span class="toc-text">1.2 值语义和引用语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E7%BB%93%E6%9E%84%E4%BD%93%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="toc-text">1.3 结构体相关操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E6%8E%A5%E5%8F%A3"><span class="toc-text">2、接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E6%8E%A5%E5%8F%A3%E8%B5%8B%E5%80%BC"><span class="toc-text">2.1 接口赋值</span></a></li></ol></li></ol></li></ol></div></div><div class="post-content"><h2 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h2><h3 id="1、类型系统"><a href="#1、类型系统" class="headerlink" title="1、类型系统"></a>1、类型系统</h3><p>类型系统是指一个语言的类型体系结构。一个典型的类型系统通常包括如下的基本内容。</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.democpp.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="面向对象编程 1、类型系统 类型系统是指一个语言的类型体系结构。一个典型的类型系统通常包括如下的基本内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go面向对象编程">
+<meta property="og:url" content="http://www.democpp.cn/2020/10/19/go-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="面向对象编程 1、类型系统 类型系统是指一个语言的类型体系结构。一个典型的类型系统通常包括如下的基本内容。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-19T08:19:44.000Z">
+<meta property="article:modified_time" content="2023-04-20T06:34:48.589Z">
+<meta property="article:author" content="liaoxianfu">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.democpp.cn/2020/10/19/go-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>go面向对象编程 | liaoxianfu's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">liaoxianfu's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java Go 学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2020/10/19/go-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="liaoxianfu">
+      <meta itemprop="description" content="Java Python Go Hadoop Spark 博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liaoxianfu's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          go面向对象编程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-19 16:19:44" itemprop="dateCreated datePublished" datetime="2020-10-19T16:19:44+08:00">2020-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-20 14:34:48" itemprop="dateModified" datetime="2023-04-20T14:34:48+08:00">2023-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="面向对象编程">面向对象编程</h2>
+<h3 id="1、类型系统">1、类型系统</h3>
+<p>类型系统是指一个语言的类型体系结构。一个典型的类型系统通常包括如下的基本内容。</p>
+<span id="more"></span>
 <p>基础类型 int、float等</p>
 <p>复合类型 数组、结构体、指针等</p>
 <p>可以指向任意对象的类型（Any类型）</p>
@@ -6,90 +216,257 @@
 <p>面向对象</p>
 <p>接口。</p>
 <p>在Java中存在两套类型系统，分别是值类型和对象类型，值类型包byte、int等值类型，对象类型是继承自Object的对象类型。这些类型可以定义成员变量和成员方法。而对于Go语言来说大多数都是值类型并且都可以包含对应的操作方法。在需要的时候你可以给任何类型新增方法（包括内置类型）。实现某个接口时无需从该接口继承，只需要实现该接口中的所有方法就被认为实现了该接口。任何类型都可以被Any类型引用，Any类型就是空接口<code>interface&#123;&#125;</code></p>
-<h4 id="1-1-为类型添加方法"><a href="#1-1-为类型添加方法" class="headerlink" title="1.1 为类型添加方法"></a>1.1 为类型添加方法</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Integer <span class="keyword">int</span></span><br><span class="line"><span class="comment">// 为Integer类增加一个Less方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(a Integer)</span><span class="title">Less</span><span class="params">(b Integer)</span><span class="title">bool</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a&lt;b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 可以直接声明</span></span><br><span class="line">    <span class="keyword">var</span> a Integer = <span class="number">1</span></span><br><span class="line">    res := a.Less(<span class="number">2</span>)</span><br><span class="line">    fmt.Println(res) <span class="comment">// true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h4 id="1-1-为类型添加方法">1.1 为类型添加方法</h4>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Integer <span class="keyword">int</span></span><br><span class="line"><span class="comment">// 为Integer类增加一个Less方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(a Integer)</span><span class="title">Less</span><span class="params">(b Integer)</span><span class="title">bool</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a&lt;b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 可以直接声明</span></span><br><span class="line">    <span class="keyword">var</span> a Integer = <span class="number">1</span></span><br><span class="line">    res := a.Less(<span class="number">2</span>)</span><br><span class="line">    fmt.Println(res) <span class="comment">// true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在Java和C++中隐藏了this指针。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 直接使用了name和age 实际上是this.name和this.age</span></span><br><span class="line">        System.out.println(<span class="string">&quot;name:&quot;</span>+ name +<span class="string">&quot; age:&quot;</span>+age);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Person p = <span class="keyword">new</span> Person();</span><br><span class="line">        p.age = <span class="number">10</span>;</span><br><span class="line">        p.name = <span class="string">&quot;w&quot;</span>;</span><br><span class="line">        p.say();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在Python中并没有省略，而是使用了self固定的关键字,它和this的指针作用是完全一样的。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>():</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self,name,age</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = <span class="built_in">int</span>(age)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">say</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">str</span>.<span class="built_in">format</span>(<span class="string">&quot;name:%s  age:%d&quot;</span>%(self.name,self.age)))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    p = Person(<span class="string">&#x27;w&#x27;</span>,<span class="number">10</span>)</span><br><span class="line">    p.say()</span><br></pre></td></tr></table></figure>
-
 <p>而在Go中没有隐藏this指针而且传递的不需要非要是指针，也不用非要叫this或者其他特定的名称。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="keyword">string</span></span><br><span class="line">	Age  <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Say</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;name:%s  age:%d\n&quot;</span>, p.Name, p.Age)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	p1 := Person&#123;</span><br><span class="line">		Name: <span class="string">&quot;w&quot;</span>,</span><br><span class="line">		Age:  <span class="number">10</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	p1.Say()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Go语言中面向对象最为直观，也无需支付额外的成本，如果要求对象必须以指针传递这时候会有一个额外的成本，因为如果对象很小的时候使用指针传递并不划算。只有需要修改某个对象的时候才必须使用指针，因为Go语言是值传递的，想要修改传递的值必须传递指针。</p>
 <p>特别注意 <strong>使用接口编程时，如果实现接口的是指针，那么不能把结构体实例值 赋值给接口。</strong></p>
 <p>例如</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个接口</span></span><br><span class="line"><span class="keyword">type</span> IRouter <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="comment">// handle之前的处理</span></span><br><span class="line">	PreHandle(request IRequest)</span><br><span class="line">	<span class="comment">// 业务处理</span></span><br><span class="line">	Handle(request IRequest)</span><br><span class="line">	<span class="comment">// handle 之后的处理</span></span><br><span class="line">	PostHandle(request IRequest)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 实现接口</span></span><br><span class="line"><span class="keyword">type</span> BaseRouter <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *BaseRouter)</span> <span class="title">PreHandle</span><span class="params">(request ziface.IRequest)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *BaseRouter)</span> <span class="title">Handle</span><span class="params">(request ziface.IRequest)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *BaseRouter)</span> <span class="title">PostHandle</span><span class="params">(request ziface.IRequest)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> ir IRouter</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">var</span> ir ziface.IRouter</span><br><span class="line">	ir = BaseRouter&#123;&#125; <span class="comment">// 报错 cannot use BaseRouter literal (type BaseRouter) as type ziface.IRouter in assignment:</span></span><br><span class="line">    <span class="comment">//	BaseRouter does not implement ziface.IRouter (Handle method has pointer receiver)</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 必须取地址 不会报错</span></span><br><span class="line">    ir = &amp;BaseRouter&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h4 id="1-2-值语义和引用语义"><a href="#1-2-值语义和引用语义" class="headerlink" title="1.2 值语义和引用语义"></a>1.2 值语义和引用语义</h4><p>值引用对变量的修改只会对自身有效，而引用语义则会修改对应引用的所有变量。例如</p>
+<h4 id="1-2-值语义和引用语义">1.2 值语义和引用语义</h4>
+<p>值引用对变量的修改只会对自身有效，而引用语义则会修改对应引用的所有变量。例如</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	p1 := Person&#123;</span><br><span class="line">		Name: <span class="string">&quot;w&quot;</span>,</span><br><span class="line">		Age:  <span class="number">10</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	p2 := p1</span><br><span class="line">	p2.Age = <span class="number">20</span></span><br><span class="line">	p2.Say() <span class="comment">// name:w  age:20</span></span><br><span class="line">	p1.Say() <span class="comment">// name:w  age:10</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;----------------------------&quot;</span>)</span><br><span class="line">	p3 := &amp;p1</span><br><span class="line">	p3.Name = <span class="string">&quot;l&quot;</span></span><br><span class="line">	p3.Say() <span class="comment">// name:l  age:10</span></span><br><span class="line">	p2.Say() <span class="comment">// name:w  age:20</span></span><br><span class="line">	p1.Say() <span class="comment">// name:l  age:10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在Go语言中类型的值语义被表现的非常纯粹，在C语言中函数接受一个数组的时候是被认为是引用类型的，但是在结构体中定义的时候又被认为是值类型的，但是在Go语言中数组就是单纯的值语义的。其中有几个特例分别是：数组切片，map，channel和接口。</p>
-<h4 id="1-3-结构体相关操作"><a href="#1-3-结构体相关操作" class="headerlink" title="1.3 结构体相关操作"></a>1.3 结构体相关操作</h4><p>在Go语言中结构体与其他的面向对象的语言的类class是一个概念，但是放弃了很多属性例如继承，只是保留了组合这个基本的属性。其实严格上来说，组合并不能算是面向对象的特性。在C语言这种面向过程的语言中依旧存在。</p>
+<h4 id="1-3-结构体相关操作">1.3 结构体相关操作</h4>
+<p>在Go语言中结构体与其他的面向对象的语言的类class是一个概念，但是放弃了很多属性例如继承，只是保留了组合这个基本的属性。其实严格上来说，组合并不能算是面向对象的特性。在C语言这种面向过程的语言中依旧存在。</p>
 <p>结构体的定义</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">//Animal 结构体.</span></span><br><span class="line"><span class="keyword">type</span> Animal <span class="keyword">struct</span> &#123;</span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">	age  <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>结构体可以直接进行组合达到继承的目的</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Dog 结构体 组合Animal结构体中的属性</span></span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Animal</span><br><span class="line">	sound <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>结构体的初始化操作</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">dog1 := <span class="built_in">new</span>(Dog) <span class="comment">// 默认都是对应的基本属性的零值</span></span><br><span class="line">	fmt.Println(dog1.age, dog1.name, dog1.sound)</span><br><span class="line">	dog2 := &amp;Dog&#123;&#125; <span class="comment">// 同样</span></span><br><span class="line">	_ = dog2</span><br><span class="line"></span><br><span class="line">	dog3 := &amp;Dog&#123;</span><br><span class="line">		Animal: Animal&#123;</span><br><span class="line">			name: <span class="string">&quot;w&quot;</span>,</span><br><span class="line">			age:  <span class="number">10</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		sound: <span class="string">&quot;sound&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(dog3.name)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>构造函数</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NewDog 构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewDog</span><span class="params">(name <span class="keyword">string</span>, age <span class="keyword">int</span>, sound <span class="keyword">string</span>)</span> *<span class="title">Dog</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;Dog&#123;</span><br><span class="line">		Animal&#123;</span><br><span class="line">			name: name,</span><br><span class="line">			age:  age,</span><br><span class="line">		&#125;,</span><br><span class="line">		sound,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Student 结构体</span></span><br><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Person的组合</span></span><br><span class="line">	Person</span><br><span class="line">	Score  <span class="keyword">float32</span></span><br><span class="line">	Gender <span class="keyword">byte</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Say function 继承Person的Say方法并添加新的功能</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Student)</span> <span class="title">Say</span><span class="params">()</span></span> &#123;</span><br><span class="line">	gender := <span class="string">&quot;&quot;</span></span><br><span class="line">	s.Person.Say()</span><br><span class="line">	<span class="keyword">if</span> s.Gender == <span class="number">0</span> &#123;</span><br><span class="line">		gender = <span class="string">&quot;男&quot;</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		gender = <span class="string">&quot;女&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;Gender：%s，Score；%f&quot;</span>, gender, s.Score)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、接口"><a href="#2、接口" class="headerlink" title="2、接口"></a>2、接口</h3><h4 id="2-1-接口赋值"><a href="#2-1-接口赋值" class="headerlink" title="2.1 接口赋值"></a>2.1 接口赋值</h4><p>接口赋值在Go中分为两种情况：一种是将对象实例赋值给接口，另一种是将另一个接口赋值给该接口。</p>
+<h3 id="2、接口">2、接口</h3>
+<h4 id="2-1-接口赋值">2.1 接口赋值</h4>
+<p>接口赋值在Go中分为两种情况：一种是将对象实例赋值给接口，另一种是将另一个接口赋值给该接口。</p>
 <p><strong>将对象赋值给接口</strong></p>
 <p>只要该对象实现了该接口中的所有方法就可以将这个对象赋值给该接口。</p>
 <p>a、定义接口</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LessAdder 定义复合接口</span></span><br><span class="line"><span class="keyword">type</span> LessAdder <span class="keyword">interface</span> &#123;</span><br><span class="line">	Less(b Integer) <span class="keyword">bool</span></span><br><span class="line">	Add(b Integer)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>b、对象实现这个接口中的所有方法</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Integer <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Less 判断小于的方法.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a Integer)</span> <span class="title">Less</span><span class="params">(b Integer)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> a &lt; b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add 方法。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a *Integer)</span> <span class="title">Add</span><span class="params">(b Integer)</span></span> &#123;</span><br><span class="line">	*a += b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>现在有个问题是，如果我们有一个<code>Integer</code>对象实例，我们是传递对象还是对象指针呢？</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a Integer = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> b LessAdder = a <span class="comment">// 错误</span></span><br><span class="line"><span class="keyword">var</span> c LessAdder = &amp;a <span class="comment">// 正确</span></span><br></pre></td></tr></table></figure>
-
 <p>为什么呢？</p>
 <p>因为我们知道如果直接进行值拷贝，那么对于<code>Add</code>方法的实现就不能达到预期。对于Less方法可以生成<code>func (a *Integer) Less(b Integer) bool</code>方法，这个方法与预期的原方法是一样的。如果方法的接受者都是进行值拷贝，那么上面的两个均可以成功赋值。</p>
 <p><strong>将接口赋值给接口</strong></p>
 <p>在Go语言中只要两个接口拥有相同的方法列表（次序不同不影响），那么它们就是等同的，可以进行相互赋值。</p>
 <p>例如我们定义了下面的两个接口</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> one</span><br><span class="line"></span><br><span class="line"><span class="comment">// ReadWriter 接口</span></span><br><span class="line"><span class="keyword">type</span> ReadWriter <span class="keyword">interface</span> &#123;</span><br><span class="line">	Read(buf []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">	Write(buf []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> two</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> IStraem <span class="keyword">interface</span> &#123;</span><br><span class="line">	Write(bs []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">    Read(bs []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>这两个接口在不同的包中且定义方法的次序不同，但是定义的方法列表相同。在Go语言中这两个接口并没有本质的区别。任何实现了one.ReadWriter就均实现了two.IStraem 两者的任何对象均可以相互赋值。当然接口的赋值中的方法并不要求<strong>一一对应</strong> 满足被赋值的接口中方法是赋值接口中方法的子集即可。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123;</span><br><span class="line">	Write(buf []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>例如Writer接口，只要实现了one.ReadWriter或two.IStraem均可以给Writer接口进行赋值。但是反过来是不可以的。</p>
 <p><strong>接口查询</strong></p>
 <p>如果想要让上面的Writer接口赋值给two.IStraem怎么办呢？就需要使用接口查询，使用接口查询查询Writer接口是否实现了two.IStream中的方法。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> file1 one.ReadWriter = <span class="built_in">new</span>(os.File)</span><br><span class="line"><span class="keyword">var</span> file2 one.Writer = file1</span><br><span class="line"><span class="keyword">if</span> file3,ok :=file2.(two.IStraem);ok&#123;</span><br><span class="line">	_=file3</span><br><span class="line">	fmt.Println(<span class="string">&quot;可以进行接口转换&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在Go语言中可以询问接口能否转为任何的类型。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> t1,ok:=a.(<span class="keyword">type</span>);ok&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>当然还可以进行更加直接了当的查询接口指向的对象实例的类型。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> v1 <span class="keyword">interface</span>&#123;&#125; =<span class="string">&quot;你好&quot;</span></span><br><span class="line">	<span class="keyword">switch</span> v:=v1.(<span class="keyword">type</span>)&#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">int</span>:</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d&quot;</span>,v)</span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">string</span>:</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%s\n&quot;</span>,v)</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		fmt.Println(<span class="string">&quot;unkonw&quot;</span>)</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
 <p><strong>接口组合</strong></p>
 <p>接口与结构体一样都可以进行组合。</p>
-</div><div class="tags"><a href="/tags/go/"><i class="fa fa-tag"></i>go</a></div><div class="post-nav"><a class="pre" href="/2020/10/28/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80%EF%BC%88%E4%B8%80%EF%BC%89/">Go语言基础</a><a class="next" href="/2020/10/19/Go%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">go网络编程</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"/><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ceph/">ceph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker-compose/">docker-compose</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15px;">并发</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/spring-cloud/" style="font-size: 15px;">spring cloud</a> <a href="/tags/spring-security/" style="font-size: 15px;">spring security</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 15px;">容器</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/docker-compose/" style="font-size: 15px;">docker-compose</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 15px;">事务</a> <a href="/tags/%E7%B4%A2%E5%BC%95/" style="font-size: 15px;">索引</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ceph/" style="font-size: 15px;">ceph</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs%E5%9D%97%E5%AD%98%E5%82%A8/">cephFs块存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-pool%E6%93%8D%E4%BD%9C/">cephFs-pool操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-ceph%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">cephFs-ceph文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/">ceph集群安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph/">ceph</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/01/Linux%E4%B8%8B%E4%BD%BF%E7%94%A8Typora%E4%B8%8EPicgo%E5%AE%9E%E7%8E%B0GitHub%E5%9B%BE%E5%BA%8A/">Linux下使用Typora与Picgo实现GitHub图床</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/">mysql事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E5%9F%BA%E7%A1%80/">mysql基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/docker-compose%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">docker-compose基础入门</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/liaoxianfu" title="liaoxianfu's github" target="_blank">liaoxianfu's github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">liaoxianfu's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><link rel="stylesheet" type="text/css" href="/css/search.css?v=1.0.0"><script type="text/javascript" src="/js/search.js?v=1.0.0"></script><script>var search_path = 'search.xml';
-if (search_path.length == 0) {
-   search_path = 'search.xml';
-}
-var path = '/' + search_path;
-searchFunc(path, 'local-search-input', 'local-search-result');
-</script><script type="text/javascript" src="/js/love.js"></script><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/go/" rel="tag"># go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/19/Go-%E6%8E%A5%E5%8F%A3/" rel="prev" title="go接口">
+      <i class="fa fa-chevron-left"></i> go接口
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/19/Go%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="next" title="go网络编程">
+      go网络编程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">面向对象编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">1、类型系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E4%B8%BA%E7%B1%BB%E5%9E%8B%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 为类型添加方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E5%80%BC%E8%AF%AD%E4%B9%89%E5%92%8C%E5%BC%95%E7%94%A8%E8%AF%AD%E4%B9%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 值语义和引用语义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-%E7%BB%93%E6%9E%84%E4%BD%93%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 结构体相关操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.2.</span> <span class="nav-text">2、接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E6%8E%A5%E5%8F%A3%E8%B5%8B%E5%80%BC"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 接口赋值</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">liaoxianfu</p>
+  <div class="site-description" itemprop="description">Java Python Go Hadoop Spark 博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备17028946号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liaoxianfu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

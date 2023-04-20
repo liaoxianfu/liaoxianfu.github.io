@@ -1,41 +1,439 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Java Python Go Hadoop Spark 博客"><title>docker使用2 | liaoxianfu's blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">docker使用2</h1><a id="logo" href="/.">liaoxianfu's blog</a><p class="description">Java Go 学习</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 存档</i></a><a href="/about/"><i class="fa fa-user"> 关于我</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">docker使用2</h1><div class="post-meta">2021-06-30<span> | </span><span class="category"><a href="/categories/docker/">docker</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6"><span class="toc-text">docker资源限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E6%95%B0%E6%8D%AE%E5%8D%B7"><span class="toc-text">docker数据卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile"><span class="toc-text">Dockerfile</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%8C%87%E4%BB%A4"><span class="toc-text">常见指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E6%AE%B5%E7%BC%96%E8%AF%91%EF%BC%8C%E5%87%8F%E5%B0%8F%E5%AE%B9%E5%99%A8%E4%BD%93%E7%A7%AF"><span class="toc-text">分段编译，减小容器体积</span></a></li></ol></li></ol></div></div><div class="post-content"><p>紧接上文<a href="http://www.democpp.cn/2021/06/08/docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/ ">docker基本使用</a></p>
-<h3 id="docker资源限制"><a href="#docker资源限制" class="headerlink" title="docker资源限制"></a>docker资源限制</h3><p>docker可以限制各种资源，例如内存、cpu、带宽以及bps和iops等。</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.democpp.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="紧接上文docker基本使用 docker资源限制 docker可以限制各种资源，例如内存、cpu、带宽以及bps和iops等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker使用2">
+<meta property="og:url" content="http://www.democpp.cn/2021/06/30/docker%E4%BD%BF%E7%94%A82/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="紧接上文docker基本使用 docker资源限制 docker可以限制各种资源，例如内存、cpu、带宽以及bps和iops等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-30T13:24:54.000Z">
+<meta property="article:modified_time" content="2023-04-20T06:34:24.610Z">
+<meta property="article:author" content="liaoxianfu">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="容器">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.democpp.cn/2021/06/30/docker%E4%BD%BF%E7%94%A82/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>docker使用2 | liaoxianfu's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">liaoxianfu's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java Go 学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2021/06/30/docker%E4%BD%BF%E7%94%A82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="liaoxianfu">
+      <meta itemprop="description" content="Java Python Go Hadoop Spark 博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liaoxianfu's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          docker使用2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-30 21:24:54" itemprop="dateCreated datePublished" datetime="2021-06-30T21:24:54+08:00">2021-06-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-20 14:34:24" itemprop="dateModified" datetime="2023-04-20T14:34:24+08:00">2023-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>紧接上文<a href="http://www.democpp.cn/2021/06/08/docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/ ">docker基本使用</a></p>
+<h3 id="docker资源限制">docker资源限制</h3>
+<p>docker可以限制各种资源，例如内存、cpu、带宽以及bps和iops等。</p>
+<span id="more"></span>
 <p>例如</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --memory 200M --memory-swap 300M  --name n1 nginx</span><br></pre></td></tr></table></figure>
-
-<h3 id="docker数据卷"><a href="#docker数据卷" class="headerlink" title="docker数据卷"></a>docker数据卷</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v 宿主机的绝对路径:容器内部路径 --name 容器名称 镜像名称 </span><br><span class="line">docker run -it -v /home/liao/data:/data/ --name c1 centos:7</span><br></pre></td></tr></table></figure>
-
+<h3 id="docker数据卷">docker数据卷</h3>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v 宿主机的绝对路径:容器内部路径 --name 容器名称 镜像名称 </span><br><span class="line">docker run -it -v /home/liao/data:/data/ --name c1 centos:7</span><br></pre></td></tr></table></figure>
 <p>此外还可以映射文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v /home/liao/data.txt:/data.txt --name c1 centos:7</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>一个简单的例子</p>
+<h3 id="Dockerfile">Dockerfile</h3>
+<p>一个简单的例子</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span>  golang:<span class="number">1.16</span> as builder</span><br><span class="line"><span class="comment"># 将dockerfile的所在文件夹下面的文件拷贝容器/go/src/test02下</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /go/src/test02</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> . .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go env -w GO111MODULE=on</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go env -w GOPROXY=https://goproxy.cn,direct</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go mod tidy</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go build  -o /root/ginapp main.go</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">18.04</span> as runner</span><br><span class="line"><span class="comment"># RUN mkdir -p /go/app</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /go/app</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> --from=builder /root/ginapp .</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [ <span class="string">&quot;./ginapp&quot;</span> ]</span></span><br></pre></td></tr></table></figure>
-
 <p>编译dockerfile</p>
 <p>在dockerfile文件所在的目录下执行</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build --tag username/tag . <span class="comment"># 注意后面有个点</span></span><br><span class="line"><span class="comment"># 例如</span></span><br><span class="line">docker build --tag liaoxianfu/gin-demo .</span><br></pre></td></tr></table></figure>
-
 <p>忽略拷贝进dockerfile编译的文件。例如假设一个项目 存在main.go 和test.go 想把这个项目做成dockr镜像 但是不想把test.go拷贝进入镜像中就可以在项目目录下创建.dockerignore文件将文件名写在.dockerignore文件中进行忽略。整体的思路和.gitignore十分相似。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test.go</span><br></pre></td></tr></table></figure>
-
-<h4 id="常见指令"><a href="#常见指令" class="headerlink" title="常见指令"></a>常见指令</h4><p>WORKDIR </p>
+<h4 id="常见指令">常见指令</h4>
+<p>WORKDIR</p>
 <p>​    指定工作目录，如果不存在会自动创建目录</p>
-<p>RUN<br>    类似于在shell下执行命令 </p>
-<p>COPY<br>    将上下文目录文件进行拷贝</p>
-<p>ADD<br>    与COPY作用相同，但是可以自动解压，以及添加网络文件</p>
-<p>EXPOSE<br>    暴露端口</p>
-<p>VOLUME<br>    映射到宿主机的目录</p>
-<h4 id="分段编译，减小容器体积"><a href="#分段编译，减小容器体积" class="headerlink" title="分段编译，减小容器体积"></a>分段编译，减小容器体积</h4><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span>  golang:<span class="number">1.16</span> as builder</span><br><span class="line"><span class="comment"># 将dockerfile的所在文件夹下面的文件拷贝容器/go/src/test02下</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /go/src/test02</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> *.go .</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> *.mod .</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> *.mod .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go env -w GO111MODULE=on</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go env -w GOPROXY=https://goproxy.cn,direct</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go mod tidy</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go build  -o /root/ginapp main.go</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译与运行分离，减小发布的容器体积</span></span><br><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">18.04</span> as runner</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /go/app</span></span><br><span class="line"><span class="comment"># 将该目录下的内容存储到宿主机而不是容器</span></span><br><span class="line"><span class="keyword">VOLUME</span><span class="bash"> [ <span class="string">&quot;/data&quot;</span> ]</span></span><br><span class="line"><span class="comment"># 将builder中的ginapp文件拷贝到当前目录</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> --from=builder /root/ginapp .</span></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [ <span class="string">&quot;./ginapp&quot;</span> ]</span></span><br><span class="line"><span class="comment"># 暴露8080端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+<p>RUN<br>
+类似于在shell下执行命令</p>
+<p>COPY<br>
+将上下文目录文件进行拷贝</p>
+<p>ADD<br>
+与COPY作用相同，但是可以自动解压，以及添加网络文件</p>
+<p>EXPOSE<br>
+暴露端口</p>
+<p>VOLUME<br>
+映射到宿主机的目录</p>
+<h4 id="分段编译，减小容器体积">分段编译，减小容器体积</h4>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span>  golang:<span class="number">1.16</span> as builder</span><br><span class="line"><span class="comment"># 将dockerfile的所在文件夹下面的文件拷贝容器/go/src/test02下</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /go/src/test02</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> *.go .</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> *.mod .</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> *.mod .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go env -w GO111MODULE=on</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go env -w GOPROXY=https://goproxy.cn,direct</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go mod tidy</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> go build  -o /root/ginapp main.go</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译与运行分离，减小发布的容器体积</span></span><br><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">18.04</span> as runner</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /go/app</span></span><br><span class="line"><span class="comment"># 将该目录下的内容存储到宿主机而不是容器</span></span><br><span class="line"><span class="keyword">VOLUME</span><span class="bash"> [ <span class="string">&quot;/data&quot;</span> ]</span></span><br><span class="line"><span class="comment"># 将builder中的ginapp文件拷贝到当前目录</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> --from=builder /root/ginapp .</span></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [ <span class="string">&quot;./ginapp&quot;</span> ]</span></span><br><span class="line"><span class="comment"># 暴露8080端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+              <a href="/tags/%E5%AE%B9%E5%99%A8/" rel="tag"># 容器</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/08/docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" rel="prev" title="docker基本使用">
+      <i class="fa fa-chevron-left"></i> docker基本使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/30/docker-compose%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" rel="next" title="docker-compose基础入门">
+      docker-compose基础入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">docker资源限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker%E6%95%B0%E6%8D%AE%E5%8D%B7"><span class="nav-number">2.</span> <span class="nav-text">docker数据卷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dockerfile"><span class="nav-number">3.</span> <span class="nav-text">Dockerfile</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%8C%87%E4%BB%A4"><span class="nav-number">3.1.</span> <span class="nav-text">常见指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E7%BC%96%E8%AF%91%EF%BC%8C%E5%87%8F%E5%B0%8F%E5%AE%B9%E5%99%A8%E4%BD%93%E7%A7%AF"><span class="nav-number">3.2.</span> <span class="nav-text">分段编译，减小容器体积</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">liaoxianfu</p>
+  <div class="site-description" itemprop="description">Java Python Go Hadoop Spark 博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备17028946号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liaoxianfu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
 
 
 
 
-</div><div class="tags"><a href="/tags/%E5%AE%B9%E5%99%A8/"><i class="fa fa-tag"></i>容器</a><a href="/tags/docker/"><i class="fa fa-tag"></i>docker</a></div><div class="post-nav"><a class="pre" href="/2021/06/30/docker-compose%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">docker-compose基础入门</a><a class="next" href="/2021/06/08/docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">docker基本使用</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"/><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ceph/">ceph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker-compose/">docker-compose</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15px;">并发</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/spring-cloud/" style="font-size: 15px;">spring cloud</a> <a href="/tags/spring-security/" style="font-size: 15px;">spring security</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 15px;">容器</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/docker-compose/" style="font-size: 15px;">docker-compose</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 15px;">事务</a> <a href="/tags/%E7%B4%A2%E5%BC%95/" style="font-size: 15px;">索引</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ceph/" style="font-size: 15px;">ceph</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs%E5%9D%97%E5%AD%98%E5%82%A8/">cephFs块存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-pool%E6%93%8D%E4%BD%9C/">cephFs-pool操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-ceph%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">cephFs-ceph文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/">ceph集群安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph/">ceph</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/01/Linux%E4%B8%8B%E4%BD%BF%E7%94%A8Typora%E4%B8%8EPicgo%E5%AE%9E%E7%8E%B0GitHub%E5%9B%BE%E5%BA%8A/">Linux下使用Typora与Picgo实现GitHub图床</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/">mysql事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E5%9F%BA%E7%A1%80/">mysql基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/docker-compose%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">docker-compose基础入门</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/liaoxianfu" title="liaoxianfu's github" target="_blank">liaoxianfu's github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">liaoxianfu's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><link rel="stylesheet" type="text/css" href="/css/search.css?v=1.0.0"><script type="text/javascript" src="/js/search.js?v=1.0.0"></script><script>var search_path = 'search.xml';
-if (search_path.length == 0) {
-   search_path = 'search.xml';
-}
-var path = '/' + search_path;
-searchFunc(path, 'local-search-input', 'local-search-result');
-</script><script type="text/javascript" src="/js/love.js"></script><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

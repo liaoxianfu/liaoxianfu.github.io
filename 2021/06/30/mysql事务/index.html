@@ -1,35 +1,265 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Java Python Go Hadoop Spark 博客"><title>mysql事务 | liaoxianfu's blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">mysql事务</h1><a id="logo" href="/.">liaoxianfu's blog</a><p class="description">Java Go 学习</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 存档</i></a><a href="/about/"><i class="fa fa-user"> 关于我</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">mysql事务</h1><div class="post-meta">2021-06-30<span> | </span><span class="category"><a href="/categories/mysql/">mysql</a></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8B%E5%8A%A1"><span class="toc-text">1、什么是事务?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">2、事务的使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E7%89%B9%E6%80%A7"><span class="toc-text">3、事务的特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="toc-text">原子性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">一致性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%94%E7%A6%BB%E6%80%A7"><span class="toc-text">隔离性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E6%80%A7"><span class="toc-text">持久性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%AF%BC%E8%87%B4%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">4、事务并发导致的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%8F%E8%AF%BB"><span class="toc-text">脏读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="toc-text">不可重复读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%BB%E8%AF%BB"><span class="toc-text">幻读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">解决方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81"><span class="toc-text">5、数据库锁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E6%93%8D%E4%BD%9C"><span class="toc-text">乐观锁操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E6%93%8D%E4%BD%9C"><span class="toc-text">悲观锁操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">6、事务的隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E6%9C%AA%E6%8F%90%E4%BA%A4"><span class="toc-text">读未提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%B7%B2%E6%8F%90%E4%BA%A4"><span class="toc-text">读已提交</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="toc-text">可重复读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%B2%E8%A1%8C%E5%8C%96%EF%BC%88%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%89"><span class="toc-text">串行化（序列化）</span></a></li></ol></li></ol></div></div><div class="post-content"><h3 id="1、什么是事务"><a href="#1、什么是事务" class="headerlink" title="1、什么是事务?"></a>1、什么是事务?</h3><p>事务就是用户定义的一系列执行SQL语句的操作, 这些操作要么完全地执行，要么完全地都不执行， 它是一个不可分割的工作执行单元。</p>
-<h3 id="2、事务的使用场景"><a href="#2、事务的使用场景" class="headerlink" title="2、事务的使用场景"></a>2、事务的使用场景</h3><p>在日常生活中，有时我们需要进行银行转账，这个银行转账操作背后就是需要执行多个SQL语句，假如这些SQL执行到一半突然停电了，那么就会导致这个功能只完成了一半，这种情况是不允许出现，要想解决这个问题就需要通过事务来完成。</p>
-<h3 id="3、事务的特性"><a href="#3、事务的特性" class="headerlink" title="3、事务的特性"></a>3、事务的特性</h3><p>事务具有ACID的是个特性（原子性、一致性、隔离性以及持久性）</p>
-<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>事务操作要么一起成功要么一起失败，不存在成功一半的情况。</p>
-<h4 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h4><p>事务不会破坏数据库的完整性约束。</p>
-<h4 id="隔离性"><a href="#隔离性" class="headerlink" title="隔离性"></a>隔离性</h4><p>多个事务并发操作时，相互隔离互不干扰</p>
-<h4 id="持久性"><a href="#持久性" class="headerlink" title="持久性"></a>持久性</h4><p>一旦事务提交操作就不会丢失。</p>
-<h3 id="4、事务并发导致的问题"><a href="#4、事务并发导致的问题" class="headerlink" title="4、事务并发导致的问题"></a>4、事务并发导致的问题</h3><p>事务并发可能会导致脏读，不可重复读和幻读问题。</p>
-<h4 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h4><p>出现的情况</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.democpp.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1、什么是事务? 事务就是用户定义的一系列执行SQL语句的操作, 这些操作要么完全地执行，要么完全地都不执行， 它是一个不可分割的工作执行单元。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql事务">
+<meta property="og:url" content="http://www.democpp.cn/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:site_name" content="liaoxianfu&#39;s blog">
+<meta property="og:description" content="1、什么是事务? 事务就是用户定义的一系列执行SQL语句的操作, 这些操作要么完全地执行，要么完全地都不执行， 它是一个不可分割的工作执行单元。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629170427020.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629171049920.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629171131537.png">
+<meta property="article:published_time" content="2021-06-30T13:42:02.000Z">
+<meta property="article:modified_time" content="2023-04-20T06:35:25.300Z">
+<meta property="article:author" content="liaoxianfu">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="事务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629170427020.png">
+
+<link rel="canonical" href="http://www.democpp.cn/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>mysql事务 | liaoxianfu's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">liaoxianfu's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java Go 学习</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.democpp.cn/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="liaoxianfu">
+      <meta itemprop="description" content="Java Python Go Hadoop Spark 博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liaoxianfu's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mysql事务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-30 21:42:02" itemprop="dateCreated datePublished" datetime="2021-06-30T21:42:02+08:00">2021-06-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-20 14:35:25" itemprop="dateModified" datetime="2023-04-20T14:35:25+08:00">2023-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1、什么是事务">1、什么是事务?</h3>
+<p>事务就是用户定义的一系列执行SQL语句的操作, 这些操作要么完全地执行，要么完全地都不执行， 它是一个不可分割的工作执行单元。</p>
+<span id="more"></span>
+<h3 id="2、事务的使用场景">2、事务的使用场景</h3>
+<p>在日常生活中，有时我们需要进行银行转账，这个银行转账操作背后就是需要执行多个SQL语句，假如这些SQL执行到一半突然停电了，那么就会导致这个功能只完成了一半，这种情况是不允许出现，要想解决这个问题就需要通过事务来完成。</p>
+<h3 id="3、事务的特性">3、事务的特性</h3>
+<p>事务具有ACID的是个特性（原子性、一致性、隔离性以及持久性）</p>
+<h4 id="原子性">原子性</h4>
+<p>事务操作要么一起成功要么一起失败，不存在成功一半的情况。</p>
+<h4 id="一致性">一致性</h4>
+<p>事务不会破坏数据库的完整性约束。</p>
+<h4 id="隔离性">隔离性</h4>
+<p>多个事务并发操作时，相互隔离互不干扰</p>
+<h4 id="持久性">持久性</h4>
+<p>一旦事务提交操作就不会丢失。</p>
+<h3 id="4、事务并发导致的问题">4、事务并发导致的问题</h3>
+<p>事务并发可能会导致脏读，不可重复读和幻读问题。</p>
+<h4 id="脏读">脏读</h4>
+<p>出现的情况</p>
 <img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629170427020.png" alt="image-20210629170427020" style="zoom:50%;" />
-
 <p>以银行转帐为例，同时开启转帐事务和取款事务，其中先进行取款事务，查询账户余额为2000元 用户开始取钱 取出1000元，此时进行转帐事务，这时转帐事务读取的账户余额为（2000-1000=1000元）产生了脏读。同时取款时发生了错误，事务进行回滚变成了2000元 这是再进行转入还是为1000元 转入2000元 账户余额变为（1000+2000=3000）元 但实际应该是4000元。</p>
-<h4 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h4><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629171049920.png" alt="image-20210629171049920" style="zoom:50%;" />
-
-<h4 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h4><img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629171131537.png" alt="image-20210629171131537" style="zoom:50%;" />
-
-<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>在事务操作之前给受影响的行加锁，但是这样会带来并发度的下降，这就是隔离级别与并发性能之间的矛盾。</p>
-<h3 id="5、数据库锁"><a href="#5、数据库锁" class="headerlink" title="5、数据库锁"></a>5、数据库锁</h3><p>数据库锁整体可分为两大类（悲观锁和乐观锁），其中悲观锁是真正意义上的锁并且在数据库上根据事务的隔离级别有对应的锁机制的实现。乐观锁是实现类似版本机制。乐观锁认为当前操作对象操作对象大概率不会并发，所以不需要加锁。</p>
-<h4 id="乐观锁操作"><a href="#乐观锁操作" class="headerlink" title="乐观锁操作"></a>乐观锁操作</h4><p>读取数据库中的对象数据加一个版本号，然后对对象数据进行操作在写入时那该版本号与数据库中的版本号进行校验，如果校验成功就证明没有发生数据没有发生修改可以进行写入，如果发生变动证明发生了修改需要进行重新尝试。</p>
+<h4 id="不可重复读">不可重复读</h4>
+<img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629171049920.png" alt="image-20210629171049920" style="zoom:50%;" />
+<h4 id="幻读">幻读</h4>
+<img src="https://cdn.jsdelivr.net/gh/liaoxianfu/blogimg/data/image-20210629171131537.png" alt="image-20210629171131537" style="zoom:50%;" />
+<h4 id="解决方法">解决方法</h4>
+<p>在事务操作之前给受影响的行加锁，但是这样会带来并发度的下降，这就是隔离级别与并发性能之间的矛盾。</p>
+<h3 id="5、数据库锁">5、数据库锁</h3>
+<p>数据库锁整体可分为两大类（悲观锁和乐观锁），其中悲观锁是真正意义上的锁并且在数据库上根据事务的隔离级别有对应的锁机制的实现。乐观锁是实现类似版本机制。乐观锁认为当前操作对象操作对象大概率不会并发，所以不需要加锁。</p>
+<h4 id="乐观锁操作">乐观锁操作</h4>
+<p>读取数据库中的对象数据加一个版本号，然后对对象数据进行操作在写入时那该版本号与数据库中的版本号进行校验，如果校验成功就证明没有发生数据没有发生修改可以进行写入，如果发生变动证明发生了修改需要进行重新尝试。</p>
 <p>乐观锁属于利他操作，适用于读多写少的环境，版本策略可以使用自增或者时间戳 （这样需要新增一个版本属性值） 或者记录行属性的值进行hash.</p>
-<h4 id="悲观锁操作"><a href="#悲观锁操作" class="headerlink" title="悲观锁操作"></a>悲观锁操作</h4><p>悲观锁由数据库提供，基于悲观锁实现事务所以直接使用事务即可。悲观锁类型包括 共享锁（又称S锁）、排它锁（X锁）以及更新锁（U锁）。</p>
+<h4 id="悲观锁操作">悲观锁操作</h4>
+<p>悲观锁由数据库提供，基于悲观锁实现事务所以直接使用事务即可。悲观锁类型包括 共享锁（又称S锁）、排它锁（X锁）以及更新锁（U锁）。</p>
 <p>共享锁：</p>
 <p>被操作对象加上S锁后只能增加增加S锁，能够同时读不能同时写。</p>
 <p>排它锁</p>
 <p>被操作对象加入X锁后不能再添加任何锁。</p>
 <p>更新锁</p>
 <p>如果操作方法想要先读再写需要增加U锁，加了U锁后 他方可以增加S锁但是不能增加更新锁和排它锁。</p>
-<h3 id="6、事务的隔离级别"><a href="#6、事务的隔离级别" class="headerlink" title="6、事务的隔离级别"></a>6、事务的隔离级别</h3><p>事务级别包括：读未提交、读已提交（Sqlserver oracle 默认的事务隔离级别）、可重复读（mysql 默认事务隔离级别）、串行化。</p>
-<h4 id="读未提交"><a href="#读未提交" class="headerlink" title="读未提交"></a>读未提交</h4><p>读未提交又称一级封锁协议，在更新数据时间增加S锁，直到事务结束，读取时不加锁。可能会出现脏读、不可重复读、幻读的情况。并发度最高。</p>
-<h4 id="读已提交"><a href="#读已提交" class="headerlink" title="读已提交"></a>读已提交</h4><p>读已提交又称二级封锁协议，在更新数据时增加X锁直到事务结束，读取时增加s锁，读取完成后立即释放锁。能够避免脏读，存在不可重复读和幻读的情况。</p>
-<h4 id="可重复读"><a href="#可重复读" class="headerlink" title="可重复读"></a>可重复读</h4><p>可重复读又称三级封锁协议，在更新数据时增加X锁直到事务结束，读取时增加S锁直到事务结束。能够避免脏读和不可重复读，存在幻读的情况。</p>
-<h4 id="串行化（序列化）"><a href="#串行化（序列化）" class="headerlink" title="串行化（序列化）"></a>串行化（序列化）</h4><p>串行化又称四级封锁协议，在更新数据时增加X锁直到事务结束，读取时为该数据存在的表增加S锁（表锁）。能够避免脏读、不可重复读和幻读的情况。但是并发度最低。</p>
+<h3 id="6、事务的隔离级别">6、事务的隔离级别</h3>
+<p>事务级别包括：读未提交、读已提交（Sqlserver oracle 默认的事务隔离级别）、可重复读（mysql 默认事务隔离级别）、串行化。</p>
+<h4 id="读未提交">读未提交</h4>
+<p>读未提交又称一级封锁协议，在更新数据时间增加S锁，直到事务结束，读取时不加锁。可能会出现脏读、不可重复读、幻读的情况。并发度最高。</p>
+<h4 id="读已提交">读已提交</h4>
+<p>读已提交又称二级封锁协议，在更新数据时增加X锁直到事务结束，读取时增加s锁，读取完成后立即释放锁。能够避免脏读，存在不可重复读和幻读的情况。</p>
+<h4 id="可重复读">可重复读</h4>
+<p>可重复读又称三级封锁协议，在更新数据时增加X锁直到事务结束，读取时增加S锁直到事务结束。能够避免脏读和不可重复读，存在幻读的情况。</p>
+<h4 id="串行化（序列化）">串行化（序列化）</h4>
+<p>串行化又称四级封锁协议，在更新数据时增加X锁直到事务结束，读取时为该数据存在的表增加S锁（表锁）。能够避免脏读、不可重复读和幻读的情况。但是并发度最低。</p>
 <p>事务隔离级别与不同问题之间的对应</p>
 <table>
 <thead>
@@ -40,7 +270,8 @@
 <th>幻读</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>读未提交</td>
 <td>X</td>
 <td>X</td>
@@ -64,11 +295,203 @@
 <td>✔</td>
 <td>✔</td>
 </tr>
-</tbody></table>
-</div><div class="tags"><a href="/tags/mysql/"><i class="fa fa-tag"></i>mysql</a><a href="/tags/%E4%BA%8B%E5%8A%A1/"><i class="fa fa-tag"></i>事务</a></div><div class="post-nav"><a class="pre" href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a><a class="next" href="/2021/06/30/mysql%E5%9F%BA%E7%A1%80/">mysql基础</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"/><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ceph/">ceph</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker-compose/">docker-compose</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15px;">并发</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/spring-cloud/" style="font-size: 15px;">spring cloud</a> <a href="/tags/spring-security/" style="font-size: 15px;">spring security</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 15px;">容器</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/docker-compose/" style="font-size: 15px;">docker-compose</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 15px;">事务</a> <a href="/tags/%E7%B4%A2%E5%BC%95/" style="font-size: 15px;">索引</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/ceph/" style="font-size: 15px;">ceph</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs%E5%9D%97%E5%AD%98%E5%82%A8/">cephFs块存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-pool%E6%93%8D%E4%BD%9C/">cephFs-pool操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/cephFs-ceph%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">cephFs-ceph文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/">ceph集群安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/05/ceph/">ceph</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/01/Linux%E4%B8%8B%E4%BD%BF%E7%94%A8Typora%E4%B8%8EPicgo%E5%AE%9E%E7%8E%B0GitHub%E5%9B%BE%E5%BA%8A/">Linux下使用Typora与Picgo实现GitHub图床</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/">mysql索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E4%BA%8B%E5%8A%A1/">mysql事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/mysql%E5%9F%BA%E7%A1%80/">mysql基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/30/docker-compose%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">docker-compose基础入门</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/liaoxianfu" title="liaoxianfu's github" target="_blank">liaoxianfu's github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">liaoxianfu's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><link rel="stylesheet" type="text/css" href="/css/search.css?v=1.0.0"><script type="text/javascript" src="/js/search.js?v=1.0.0"></script><script>var search_path = 'search.xml';
-if (search_path.length == 0) {
-   search_path = 'search.xml';
-}
-var path = '/' + search_path;
-searchFunc(path, 'local-search-input', 'local-search-result');
-</script><script type="text/javascript" src="/js/love.js"></script><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
+</tbody>
+</table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/tags/%E4%BA%8B%E5%8A%A1/" rel="tag"># 事务</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/30/mysql%E5%9F%BA%E7%A1%80/" rel="prev" title="mysql基础">
+      <i class="fa fa-chevron-left"></i> mysql基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/30/mysql%E7%B4%A2%E5%BC%95/" rel="next" title="mysql索引">
+      mysql索引 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">1、什么是事务?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">2、事务的使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">3、事务的特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">3.2.</span> <span class="nav-text">一致性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E6%80%A7"><span class="nav-number">3.3.</span> <span class="nav-text">隔离性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E6%80%A7"><span class="nav-number">3.4.</span> <span class="nav-text">持久性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%AF%BC%E8%87%B4%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">4、事务并发导致的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%84%8F%E8%AF%BB"><span class="nav-number">4.1.</span> <span class="nav-text">脏读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="nav-number">4.2.</span> <span class="nav-text">不可重复读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%BB%E8%AF%BB"><span class="nav-number">4.3.</span> <span class="nav-text">幻读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">4.4.</span> <span class="nav-text">解决方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81"><span class="nav-number">5.</span> <span class="nav-text">5、数据库锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E6%93%8D%E4%BD%9C"><span class="nav-number">5.1.</span> <span class="nav-text">乐观锁操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E6%93%8D%E4%BD%9C"><span class="nav-number">5.2.</span> <span class="nav-text">悲观锁操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">6.</span> <span class="nav-text">6、事务的隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E6%9C%AA%E6%8F%90%E4%BA%A4"><span class="nav-number">6.1.</span> <span class="nav-text">读未提交</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%B7%B2%E6%8F%90%E4%BA%A4"><span class="nav-number">6.2.</span> <span class="nav-text">读已提交</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="nav-number">6.3.</span> <span class="nav-text">可重复读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%B2%E8%A1%8C%E5%8C%96%EF%BC%88%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%89"><span class="nav-number">6.4.</span> <span class="nav-text">串行化（序列化）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">liaoxianfu</p>
+  <div class="site-description" itemprop="description">Java Python Go Hadoop Spark 博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">豫ICP备17028946号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liaoxianfu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
